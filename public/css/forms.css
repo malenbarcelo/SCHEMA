@@ -1,0 +1,16 @@
+/*general*/
+.form-title{
+    text-align: center;
+}
+.div-form{
+    border:red solid 1px;
+    width: 60%;
+    margin:auto;
+    text-align: center;
+}
+
+/*tokensAsignation*/
+.div-tokens-to-asign{
+    border:red solid 1px
+}
+

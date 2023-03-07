@@ -1,0 +1,21 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<h1 class="form-title">Generación de tokens</h1>
+
+<div class="div-form">
+    <form action="/exercises/new" method="POST" name="form-new-excercise">
+        
+        <div>
+            <label for="category_name">Categoría</label>
+            <input type="text" name="category_name">
+        </div>
+        <div>
+            <input type="submit" value="Generar">
+            
+        </div>
+    </form>
+</div>
+
+
+<%- include('../partials/footer') %>

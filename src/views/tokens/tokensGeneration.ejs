@@ -1,0 +1,38 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<h1 class="form-title">Generación de tokens</h1>
+
+<div class="div-form">
+    <form action="/tokens/generate" method="POST" name="form-token-generation">
+        <div>
+            <label for="company">Seleccione una institución</label>
+            <select name="company" id="select-company" class="form-token-select">
+                <option value="default" selected>--Seleccione una institución--</option>
+                <% companies.forEach(company => { %>
+                    <option value="<%= company.company_name %>"><%= company.company_name %></option>
+                <% }) %>
+            </select>
+            <input type="button" value="+" class="button-add-company">
+        </div>
+        <div>
+            <label for="company_administrator_tokens">Cantidad de licencias de administrador</label>
+            <input type="number" name="company_administrator_tokens">
+        </div>
+        <div>
+            <label for="teacher_tokens">Cantidad de licencias de profesor</label>
+            <input type="number" name="teacher_tokens">
+        </div>
+        <div>
+            <label for="student_tokens">Cantidad de licencias de alumno</label>
+            <input type="number" name="student_tokens">
+        </div>
+        <div>
+            <input type="submit" value="Generar">
+            <input type="reset" value="Cancelar">
+        </div>
+    </form>
+</div>
+
+
+<%- include('../partials/footer') %>
