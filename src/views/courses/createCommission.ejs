@@ -1,0 +1,57 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<body class = body-form>
+
+    <h1 class="formTitle">Crear comisión</h1>
+
+    <form action="/courses/create-commission" method="POST" name="formCreateCommission">
+        <div class="divSelectCompany">
+            <select name="selectCompany" class="SelectCompany">
+                <option value="default" selected>--Seleccione una institución--</option>
+                <% companies.forEach(company => { %>
+                    <option value="<%= company.company_name %>"><%= company.company_name %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="divSelectCourse">
+            <select name="selectCourse" class="SelectCourse">
+                <option value="default" selected>--Seleccione un curso--</option>
+                <% courses.forEach(course => { %>
+                    <option value="<%= course.course_name %>"><%= course.course_name %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="divSelectCourseCreateCommission">
+            <select name="selectTeacher" class="SelectFormCreateCommission">
+                <option value="default" selected>--Seleccione un profesor--</option>
+                <% teachers.forEach(teacher => { %>
+                    <option value="<%= teacher.id %>"><%= teacher.first_name + ' ' + teacher.last_name + ' - ' +teacher.user_email %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="divSelectCourseCreateCommission">
+            <label for="startDateCommission" class="labelForm">Fecha de inicio</label>
+            <input type="date" name="startDateCommission">
+        </div>
+        <div class="divSelectCourseCreateCommission">
+            <label for="endDateCommission" class="labelForm">Fecha de finalización</label>
+            <input type="date" name="endDateCommission">
+        </div>
+        <div class="divButtonsCreateCommission">
+            <input type="submit" value="Crear" class="buttonForm btnCreateCommmission">
+            <input type="reset" value="Cancelar" class="buttonForm btnCreateCommmission">
+        </div>
+        
+        
+
+    
+
+
+
+
+    </form>
+
+</body>
+
+<%- include('../partials/footer') %>

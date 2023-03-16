@@ -1,6 +1,25 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
 
-Users Login
+<h3 class="formTitle">Iniciar sesión</h3>
+
+<form action="/users/login" method="POST" name="formLogin" class="formLogin">
+    
+    <div class="divFormLogin">
+        <input type="text" name="formLoginEmail" placeholder="Email" class="inputForm">
+    </div>
+
+    <div class="divFormLogin">
+        <input type="text" name="formLoginPassword" placeholder="Contraseña" class="inputForm">
+    </div>
+
+    <div class="divFormLogin">
+        <button type="submit" class="buttonForm">Ingresar</button>
+    </div>
+
+    <div class="divFormHrefs">
+        <p class="pLoginForm"><a href="" class="aLoginForm">Olvidé mi contraseña</a></p>                 
+    </div>
+</form>
 
 <%- include('../partials/footer') %>

@@ -1,0 +1,49 @@
+.formTitle{
+    text-align: center;
+    font-size: 18px;
+    margin-bottom:25px;
+    margin-top:25px
+}
+
+form{
+    text-align: center;
+}
+
+.labelForm{
+    font-size: 13px;
+    text-align: left;
+}
+.buttonForm{
+    border-radius:0px;
+    border:none;
+    background-color:rgb(5, 5, 160);
+    padding:6px 8px;
+    margin-top:15px;
+    color: white;
+}
+
+.buttonForm:hover{
+    background-color: rgb(2, 2, 108);
+    cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}/*Hide arrows from input type text*/
+
+
+.divSelectCompany{
+    margin-bottom: 15px;
+}
+
+.SelectCompany{
+    height: 25px;
+    border-radius: 0px;
+    border:none;
+    background-color: rgb(230, 230, 232);
+    outline: none;
+    text-align: center;
+}
+

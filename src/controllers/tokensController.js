@@ -54,27 +54,71 @@ const tokensController = {
         res.send('Error')
       }
     },
-    asignation: async(req,res) => {
+    assignation: async(req,res) => {
       try{
-        const notAsignedAdm = await functions.notAsignedTokens(1,2)
-        const notAsignedTeacher = await functions.notAsignedTokens(1,3)
-        const notAsignedStudent = await functions.notAsignedTokens(1,4)
-        
-        return res.render('tokens/tokensAsignation',{
+        const companies = await db.Companies.findAll()
+        const notAssignedAdm = await functions.notAssignedTokens(-1,2)
+        const notAssignedTeacher = await functions.notAssignedTokens(-1,3)
+        const notAssignedStudent = await functions.notAssignedTokens(-1,4)
+
+        return res.render('tokens/tokensAssignation',{
           title:'Asignar token',
-          notAsignedAdm,
-          notAsignedTeacher,
-          notAsignedStudent
+          notAssignedAdm,
+          notAssignedTeacher,
+          notAssignedStudent,
+          companies
         })
         }catch(error){
         return res.send('Error')
-      } 
+      }
     },
-    asignationProcess: async(req,res) =>{
+    assignationProcess: async(req,res) =>{
       try{
-        console.log(req.body)
-        return res.send('hola')
-        }catch(error){
+        const keys = Object.keys(req.body)
+        for (let i = 0; i < keys.length; i+=6) {
+          if(req.body[keys[i+3]]){
+            let categoryId
+            switch (keys[i].substring(0,3)) {
+              case 'adm':
+                categoryId = 2;
+                break;
+              case 'tea':
+                categoryId = 3;
+                break;
+              case 'stu':
+                categoryId = 4;
+                break;
+            }
+            let idToken = req.body[keys[i]]
+            let idCompany = req.body[keys[i+1]]
+            let firstName = req.body[keys[i+2]]
+            let lastName = req.body[keys[i+3]]
+            let email = req.body[keys[i+4]]
+
+            //Create user
+            await db.Users.create({
+                  first_name: firstName,
+                  last_name: lastName,
+                  user_email: email,
+                  password: email,
+                  id_user_categories: categoryId,
+                  id_companies: idCompany
+                })
+            //get new user id
+            const newUser = await db.Users.findOne({where:{user_email:email}})
+            const idNewUser = newUser.id
+
+            //update tokens set user_id
+            await db.Tokens.update(
+              {id_users: idNewUser},
+              {where: {id: idToken}
+            });
+          }
+        }
+
+        return res.redirect('/tokens/assignation')
+
+      }catch(error){
           return res.send('Error')
       }
 

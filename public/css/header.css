@@ -1,6 +1,5 @@
 header{
-    background-color: rgb(5, 5, 160);
-    
+    background-color: rgb(5, 5, 160);    
 }
 
 .header-menu{
@@ -12,7 +11,7 @@ header{
 .a-header-menu{
     color:rgb(235, 234, 234);
     text-decoration: none;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: bold;
 }
 
@@ -31,7 +30,7 @@ li{
 }
 
 .fa-chevron-down{
-    font-size: 12px;
+    font-size: 10px;
     margin-left:5px
 }
 
@@ -40,19 +39,28 @@ li{
     position: absolute;
     background-color:rgb(5, 5, 160);
     padding: 0px;
-    width: 180%;
-    margin-top:12px;
+    margin-top:10px;
     visibility:hidden;
     opacity:0;
-    transition:opacity 1s
+    transition:opacity 1s;
+    width:120%;
+    text-align: left;
+}
+
+.header-submenu-tokens{
+    width:150%
+}
+
+.header-submenu-courses{
+    width:170%
 }
 
 .a-header-submenu{
     display:block;
     color:rgb(235, 234, 234);
     text-decoration: none;
-    width:150%;
-    padding:8px
+    font-size: 13px;
+    padding:6px 8px
 }
 
 .li-header-menu:hover .header-submenu{

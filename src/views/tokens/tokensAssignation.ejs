@@ -1,0 +1,67 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<h1 class="formTitle">Tokens pendientes de asignación</h1>
+
+<form action="/tokens/assignation" method="POST" name="formTokenAssignation">
+    
+    <% if (notAssignedAdm.length>0) { %>
+        <div class="divTokensToAssign">
+            <p class="pCategoryTitle">Tokens de administrador</p>
+            <% for( let i = 0; i < notAssignedAdm.length; i++ ) { %>
+                <div class="divTokenData">
+                    <span class="spanTokenNumber"><%= '#'+(i+1) %></span>
+                    <input type="text" class="inputIdToken inputTokenAssign" name="<%= 'admIdToken'+ i %>" value=<%= notAssignedAdm[i].dataValues.id %> readonly>
+                    <input type="text" class="inputIdCompany inputTokenAssign" name="<%= 'admIdCompany'+ i %>" value=<%= notAssignedAdm[i].dataValues.id_companies %> readonly>
+                    <input type="text" class="inputTokenAssign" name="<%= 'admFirstName'+ i %>" placeholder="Nombre">
+                    <input type="text" class="inputTokenAssign" name="<%= 'admLastName'+ i %>" placeholder="Apellido">
+                    <input type="text" class="inputEmail inputTokenAssign" name="<%= 'admEmail'+ i %>" placeholder="Email">
+                    <input type="text" class="inputCompany inputTokenAssign" name="<%= 'admCompany'+ i %>" value=<%= notAssignedAdm[i].dataValues.token_company.company_name %> readonly>
+                    
+                </div>
+            <% } %>
+        </div>
+    <% } %>
+
+    <% if (notAssignedTeacher.length >0) { %>
+        <div class="divTokensToAssign">
+            <p class="pCategoryTitle">Tokens de profesor</p>
+            <% for( let i = 0; i < notAssignedTeacher.length; i++ ) { %>
+                <div class="divTokenData">
+                    <span class="spanTokenNumber"><%= '#'+(i+1) %></span>
+                    <input type="text" class="inputIdToken inputTokenAssign" name="<%= 'teacherIdToken'+ i %>" value=<%= notAssignedTeacher[i].dataValues.id %> readonly>
+                    <input type="text" class="inputIdCompany inputTokenAssign" name="<%= 'teacherIdCompany'+ i %>" value=<%= notAssignedTeacher[i].dataValues.id_companies %> readonly>
+                    <input type="text" class="inputTokenAssign" name="<%= 'teacherFirstName'+ i %>" placeholder="Nombre">
+                    <input type="text" class="inputTokenAssign" name="<%= 'teacherLastName'+ i %>" placeholder="Apellido">
+                    <input type="text" class="inputEmail inputTokenAssign" name="<%= 'teacherEmail'+ i %>" placeholder="Email">
+                    <input type="text" class="inputCompany inputTokenAssign" name="<%= 'teacherCompany'+ i %>" value=<%= notAssignedTeacher[i].dataValues.token_company.company_name %> readonly>
+                </div>
+            <% } %>
+        </div>
+    <% } %>
+
+    <% if (notAssignedStudent.length>0) { %>
+        <div class="divTokensToAssign">
+            <p class="pCategoryTitle">Tokens de alumno</p>
+            <% for( let i = 0; i < notAssignedStudent.length; i++ ) { %>
+                <div class="divTokenData">
+                    <span class="spanTokenNumber"><%= '#'+(i+1) %></span>
+                    <input type="text" class="inputIdToken inputTokenAssign" name="<%= 'studentIdToken'+ i %>" value=<%= notAssignedStudent[i].dataValues.id %> readonly>
+                    <input type="text" class="inputIdCompany inputTokenAssign" name="<%= 'studentIdCompany'+ i %>" value=<%= notAssignedStudent[i].dataValues.id_companies %> readonly>
+                    <input type="text" class="inputTokenAssign" name="<%= 'studentFirstName'+ i %>" placeholder="Nombre">
+                    <input type="text" class="inputTokenAssign" name="<%= 'studentLastName'+ i %>" placeholder="Apellido">
+                    <input type="text" class="inputEmail inputTokenAssign" name="<%= 'studentEmail'+ i %>" placeholder="Email">
+                    <input type="text" class="inputCompany inputTokenAssign" name="<%= 'studentCompany'+ i %>" value=<%= notAssignedStudent[i].dataValues.token_company.company_name %> readonly>
+                </div>
+            <% } %>
+        </div>
+    <% } %>
+
+    <div class="divTokensToAssign">
+        <input type="submit" value="Asignar" class="buttonForm">
+        <input type="reset" value="Cancelar" class="buttonForm">
+    </div>
+</form>
+
+
+<%- include('../partials/footer') %>

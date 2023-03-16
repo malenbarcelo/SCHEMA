@@ -4,8 +4,7 @@ const router = express.Router()
 
 router.get('/generate',tokensController.generate)
 router.post('/generate', tokensController.store)
-router.get('/asignation',tokensController.asignation)
-router.post('/asignation',tokensController.asignationProcess)
-
+router.get('/assignation',tokensController.assignation)
+router.post('/assignation',tokensController.assignationProcess)
 
 module.exports = router

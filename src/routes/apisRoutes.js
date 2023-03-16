@@ -5,8 +5,6 @@ const exercisesController = require('../controllers/exercisesController.js')
 const router = express.Router()
 
 router.get('/users',usersController.list)
-router.get('/users/:email',usersController.filterUser)
-router.get('/exercises',exercisesController.list)
-router.post('/exercises',exercisesController.store)
+router.post('/exercises',exercisesController.storeResults)
 
 module.exports = router

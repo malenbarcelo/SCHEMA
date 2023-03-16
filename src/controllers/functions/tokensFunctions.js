@@ -24,18 +24,34 @@ const tokensFunctions = {
             res.send("Error")
         }
     },
-    notAsignedTokens:async(idCompany,idUserCategory) => {
+    notAssignedTokens:async(idCompany,idUserCategory) => {
         try{
-            const notAsignedTokens = await db.Tokens.findAll({
+            if(idCompany != -1){
+                const products = await db.Products.findAll({include: [{association:'token_company'}],where:{product_category_id:productCategoryId.dataValues.product_category_id}})
+                const notAsignedTokens = await db.Tokens.findAll({
+                    include:[{
+                        association:'token_company'
+                    }],
+                    where:{
+                        id_companies:idCompany,
+                        id_user_categories:idUserCategory,
+                        id_users:null
+                    }
+                })
+            return notAssignedTokens
+            }
+            const notAssignedTokens = await db.Tokens.findAll({
+                include:[{
+                    association:'token_company'
+                }],
                 where:{
-                    id_companies:idCompany,
                     id_user_categories:idUserCategory,
                     id_users:null
                 }
             })
-            return notAsignedTokens
-        }catch(error){
-            res.send("Error")
+            return notAssignedTokens
+            }catch(error){
+                return res.send('Error')            
         }
     }
 }

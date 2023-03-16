@@ -1,0 +1,33 @@
+
+.buttonAddTokenGeneration{
+    border:none;
+    border-radius: 5px;
+    height: 20px;
+    width: 20px;
+    background-color: rgb(95, 95, 96);
+    color: white;
+}
+
+.buttonAddCompany:hover{
+    background-color:grey;
+    cursor: pointer;
+}
+
+.divInputTokenGeneration{
+    display: flex;
+    flex-direction: row;
+    width: 210px;
+    margin:auto;
+    justify-content: space-between;
+    margin-bottom:6px;
+    align-items: center;
+}
+
+.inputFormTokenGeneration{
+    width: 35px;
+    height: 20px;
+    text-align: center;
+    border:rgb(171, 170, 170) solid 1px;
+    outline:none
+}
+

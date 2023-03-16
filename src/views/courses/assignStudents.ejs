@@ -1,0 +1,39 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<body class = body-form>
+
+    <h1 class="formTitle">Asignar alumnos a comisión</h1>
+
+    <form action="/courses/students-assignation" method="POST" name="formAssignStudens">
+        <div class="divSelectCompany">
+            <select name="selectCompany" class="SelectCompany">
+                <option value="default" selected>--Seleccione una institución--</option>
+                <% companies.forEach(company => { %>
+                    <option value="<%= company.company_name %>"><%= company.company_name %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="divSelectCourse">
+            <select name="selectCourse" class="SelectCourse">
+                <option value="default" selected>--Seleccione un curso--</option>
+                <% courses.forEach(course => { %>
+                    <option value="<%= course.course_name %>"><%= course.course_name %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="divSelectCommission">
+            <select name="selectCommission" class="SelectCommission">
+                <option value="default" selected>--Seleccione una comisión--</option>
+                <% commissions.forEach(commission => { %>
+                    <option value="<%= commission.commission %>"><%= commission.commission + ' [Inicio: ' + commission.start_date + ' --- Fin: ' + commission.end_date + ']'%></option>
+                <% }) %>
+            </select>
+        </div>
+        
+
+    </form>
+
+</body>
+
+<%- include('../partials/footer') %>
