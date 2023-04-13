@@ -1,11 +1,12 @@
 header{
-    background-color: rgb(5, 5, 160);    
+    background-color: rgb(5, 5, 160);
 }
 
 .header-menu{
     display:flex;
     justify-content: center;
     column-gap: 30px;
+    margin-bottom: 0px;
 }
 
 .a-header-menu{
@@ -45,6 +46,7 @@ li{
     transition:opacity 1s;
     width:120%;
     text-align: left;
+    z-index: 1;
 }
 
 .header-submenu-tokens{
@@ -68,5 +70,21 @@ li{
     opacity:1
 }
 
+.userLogged{
+    text-align: right;
+    padding-right: 15px;
+}
+.userLoggedName{
+    margin-top:3px;
+    font-weight: bold;
+    font-size: 15px;
+}
+.userLoggedLogout{
+    margin-top:3px;
+    font-size: 12px;
+}
 
+.aUserLogged{
+    color: rgb(4, 4, 222)
+}
 

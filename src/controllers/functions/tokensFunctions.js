@@ -12,13 +12,13 @@ const tokensFunctions = {
             res.send("Error")
         }
     },
-    tokenStore: async(idCompany,idUser) => {
+    tokenStore: async(token,idCompany,idUserCategory,idUser) => {
         try{
             await db.Tokens.create({
                 token: token,
                 id_companies: idCompany,
-                id_user_categories: idUser,
-                id_users:null
+                id_user_categories: idUserCategory,
+                id_users: idUser ? idUser : null
               })
         }catch(error){
             res.send("Error")
@@ -26,30 +26,18 @@ const tokensFunctions = {
     },
     notAssignedTokens:async(idCompany,idUserCategory) => {
         try{
-            if(idCompany != -1){
-                const products = await db.Products.findAll({include: [{association:'token_company'}],where:{product_category_id:productCategoryId.dataValues.product_category_id}})
-                const notAsignedTokens = await db.Tokens.findAll({
-                    include:[{
-                        association:'token_company'
-                    }],
+            const notAsignedTokens = await db.Tokens.findAll({
+                    include:[{association:'token_company'}],
                     where:{
                         id_companies:idCompany,
                         id_user_categories:idUserCategory,
                         id_users:null
-                    }
+                    },
+                    nest:true,
+                    raw:true,
+                    include: [{all: true}],
                 })
-            return notAssignedTokens
-            }
-            const notAssignedTokens = await db.Tokens.findAll({
-                include:[{
-                    association:'token_company'
-                }],
-                where:{
-                    id_user_categories:idUserCategory,
-                    id_users:null
-                }
-            })
-            return notAssignedTokens
+            return notAsignedTokens
             }catch(error){
                 return res.send('Error')            
         }

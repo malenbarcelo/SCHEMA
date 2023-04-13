@@ -1,55 +1,81 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
 
+<% if (locals.successMessage) { %>
+    <div class="successMessage">
+        <i class="fa-solid fa-check"></i>
+        <p><%= successMessage%></p>
+    </div>
+<% } %>
+
 <body class = body-form>
 
-    <h1 class="formTitle">Crear comisión</h1>
+    <h1 class="title1">Crear comisión</h1>
 
-    <form action="/courses/create-commission" method="POST" name="formCreateCommission">
-        <div class="divSelectCompany">
-            <select name="selectCompany" class="SelectCompany">
-                <option value="default" selected>--Seleccione una institución--</option>
-                <% companies.forEach(company => { %>
-                    <option value="<%= company.company_name %>"><%= company.company_name %></option>
-                <% }) %>
-            </select>
-        </div>
-        <div class="divSelectCourse">
-            <select name="selectCourse" class="SelectCourse">
+    <form action="/courses/create-commission" method="POST" name="formCreateCommission" class="form1">
+        <% if (user.id_user_categories == 1) { %>
+            <div>
+                <select name="selectCompany" class="input1 select1 <%= locals.errors && errors.selectCompany ? 'isInvalid' : null %>">
+                    <option value="default" selected>--Seleccione una institución--</option>
+                    <% companies.forEach(company => { %>
+                        <option value="<%= company.company_name %>"><%= company.company_name %></option>
+                    <% }) %>
+                </select>
+                <div class="divError1">
+                    <% if (locals.errors && errors.selectCompany) { %>
+                        <%= errors.selectCompany.msg %>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+        <div>
+            <select name="courseName" class="input1 select1 <%= locals.errors && errors.courseName ? 'isInvalid' : null %>">
                 <option value="default" selected>--Seleccione un curso--</option>
                 <% courses.forEach(course => { %>
-                    <option value="<%= course.course_name %>"><%= course.course_name %></option>
+                    <option value="<%= course.course_name %>" <%= locals.oldData && oldData.courseName == course.course_name ? 'selected' : null %>><%= course.course_name %></option>
                 <% }) %>
             </select>
+            <div class="divError1">
+                <% if (locals.errors && errors.courseName) { %>
+                    <%= errors.courseName.msg %> 
+                <% } %>
+            </div>
         </div>
-        <div class="divSelectCourseCreateCommission">
-            <select name="selectTeacher" class="SelectFormCreateCommission">
+        <div>
+            <select name="teacherName" class="input1 select1 <%= locals.errors && errors.teacherName ? 'isInvalid' : null %>">
                 <option value="default" selected>--Seleccione un profesor--</option>
                 <% teachers.forEach(teacher => { %>
-                    <option value="<%= teacher.id %>"><%= teacher.first_name + ' ' + teacher.last_name + ' - ' +teacher.user_email %></option>
+                    <option value="<%= teacher.id %>" <%= locals.oldData && oldData.teacherName == teacher.id? 'selected' : null %>><%= teacher.first_name + ' ' + teacher.last_name + ' - ' +teacher.user_email %></option>
                 <% }) %>
             </select>
+            <div class="divError1">
+                <% if (locals.errors && errors.teacherName) { %>
+                    <%= errors.teacherName.msg %> 
+                <% } %>
+            </div>
         </div>
-        <div class="divSelectCourseCreateCommission">
-            <label for="startDateCommission" class="labelForm">Fecha de inicio</label>
-            <input type="date" name="startDateCommission">
+        <div class="divFlex3">
+            <label for="startDateCommission" class="label1">Fecha inicio</label>
+            <input type="date" name="startDateCommission" value="<%= locals.oldData && oldData.startDateCommission ? oldData.startDateCommission : null %>" class="input1 input3 <%= locals.errors && errors.startDateCommission ? 'isInvalid' : null %>">
         </div>
-        <div class="divSelectCourseCreateCommission">
-            <label for="endDateCommission" class="labelForm">Fecha de finalización</label>
-            <input type="date" name="endDateCommission">
+        <div class="divError1">
+            <% if (locals.errors && errors.startDateCommission && (errors.startDateCommission.msg != 'error')) { %>
+                <%= errors.startDateCommission.msg %> 
+            <% } %>
         </div>
-        <div class="divButtonsCreateCommission">
-            <input type="submit" value="Crear" class="buttonForm btnCreateCommmission">
-            <input type="reset" value="Cancelar" class="buttonForm btnCreateCommmission">
+        <div class="divFlex3">
+            <label for="endDateCommission" class="label1">Fecha fin</label>
+            <input type="date" name="endDateCommission" value="<%= locals.oldData && oldData.endDateCommission ? oldData.endDateCommission : null %>" class="input1 input3 <%= locals.errors && errors.endDateCommission ? 'isInvalid' : null %>">
         </div>
-        
-        
-
-    
-
-
-
-
+        <div class="divError1">
+            <% if (locals.errors && errors.endDateCommission) { %>
+                <%= errors.endDateCommission.msg %> 
+            <% } %>
+        </div>
+        <div class="divButtons1">
+            <input type="submit" value="Crear" class="button1">
+            <input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">
+        </div>
     </form>
 
 </body>

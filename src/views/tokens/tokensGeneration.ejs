@@ -2,35 +2,54 @@
 <%- include('../partials/header') %>
 
 
-<h1 class="formTitle">Generación de tokens</h1>
+<% if (locals.successMessage1) { %>
+    <script>
+        alertify.success('Tokens generados con éxito')
+    </script>
+<% } %>
 
-<form action="/tokens/generate" method="POST" name="formTokenGeneration">        
-    <div class="divSelectCompany">
-        <select name="company" class="SelectCompany">
-            <option value="default" selected>--Seleccione una institución--</option>
-            <% companies.forEach(company => { %>
-                <option value="<%= company.company_name %>"><%= company.company_name %></option>
-            <% }) %>
-        </select>
-        <input type="button" value="+" class="buttonAddTokenGeneration">
+<h1 class="title1">Generación de tokens</h1>
+
+<form action="/tokens/generate" method="POST" name="formTokenGeneration" class="form1">
+    <div>
+        <div>
+            <select name="company" class="input1 select1 <%= locals.errors && errors.company ? 'isInvalid' : null %>">
+                <option value="default" selected>--Seleccione una institución--</option>
+                <% companies.forEach(company => { %>
+                    <option value="<%= company.company_name %>"><%= company.company_name %></option>
+                <% }) %>
+            </select>
+            <a href="/users/create-company" class="button1 button2">+</a>
+        </div>
+        <div class="divError1">
+            <% if (locals.errors && errors.company) { %>
+                <%= errors.company.msg %>
+            <% } %>
+        </div>
+    </div>        
+    
+    <div class="divFlex1">
+        <label for="admTokens" class="label1">Licencias de administrador</label>
+        <input type="number" name="admTokens" class="input2">
     </div>
-    <div class="divInputTokenGeneration">
-        <label for="company_administrator_tokens" class="labelFormTokenGeneration">Licencias de administrador</label>
-        <input type="number" name="company_administrator_tokens" class="input_form inputFormTokenGeneration">
+    <div class="divError1"></div>
+    <div class="divFlex1">
+        <label for="teacherTokens" class="label1">Licencias de profesor</label>
+        <input type="number" name="teacherTokens" class="input2">
     </div>
-    <div class="divInputTokenGeneration">
-        <label for="teacher_tokens" class="labelFormTokenGeneration">Licencias de profesor</label>
-        <input type="number" name="teacher_tokens" class="input_form inputFormTokenGeneration">
+    <div class="divError1"></div>
+    <div class="divFlex1">
+        <label for="studentTokens" class="label1">Licencias de alumno</label>
+        <input type="number" name="studentTokens" class="input2">
     </div>
-    <div class="divInputTokenGeneration">
-        <label for="student_tokens" class="labelFormTokenGeneration">Licencias de alumno</label>
-        <input type="number" name="student_tokens" class="input_form inputFormTokenGeneration">
-    </div>
-    <div class="divButtonsTokenGeneration">
-        <input type="submit" value="Generar" class="buttonForm">
-        <input type="reset" value="Cancelar" class="buttonForm">
+    <div class="divError1"></div>
+    <div>
+        <input type="submit" value="Generar" class="button1">
+        <input type="reset" value="Cancelar" class="button1">
     </div>        
 </form>
+
+
 
 
 <%- include('../partials/footer') %>

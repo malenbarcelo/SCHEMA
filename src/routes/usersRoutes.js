@@ -1,10 +1,20 @@
 const express = require('express')
 const usersController = require('../controllers/usersController.js')
 const router = express.Router()
+const userFormsValidations = require('../validations/userFormsValidations.js')
+const guestMiddleWare = require('../middlewares/guestMiddleware.js')
+const authMiddleware = require('../middlewares/authMiddleware.js')
+const admMiddleware = require('../middlewares/admMiddleware.js')
 
-router.get('/login',usersController.login)
-router.get('/register',usersController.register)
-router.get('/profile',usersController.profile)
+router.get('/',guestMiddleWare,usersController.login)
+router.get('/login',guestMiddleWare,usersController.login)
+router.post('/login',userFormsValidations.loginFormValidations,usersController.processLogin)
 router.get('/logout',usersController.logout)
+router.get('/create-company',admMiddleware,usersController.createCompany)
+router.post('/create-company',admMiddleware,userFormsValidations.createCompanyFormValidations,usersController.processCreateCompany)
+router.get('/profile',authMiddleware,usersController.profile)
+router.get('/logout',usersController.logout)
+router.get('/change-password',usersController.changePassword)
+router.post('/change-password',userFormsValidations.changePswFormValidations,usersController.processChangePassword)
 
 module.exports = router

@@ -11,10 +11,11 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING,
           allowNull: false,
        },
-       company_email:{
-        type: DataTypes.STRING,
-        allowNull: false,
-      }
+       enabled:{
+         type: DataTypes.INTEGER,
+         allowNull: false,
+      },
+
     }
     const config = {
        tableName : 'companies',

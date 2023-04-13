@@ -39,5 +39,12 @@ module.exports = (sequelize, DataTypes) => {
    }
    const Course_commission = sequelize.define(alias, cols, config)
 
+   Course_commission.associate = (models) => {
+      Course_commission.belongsTo(models.Courses,{
+          as:'course_commission_course',
+          foreignKey: 'id_courses'
+      })
+   }
+
    return Course_commission
 }

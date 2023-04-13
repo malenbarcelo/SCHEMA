@@ -56,15 +56,3 @@
     width: 230px;
 }
 
-.divButtonTokenAssign{
-    display: flex;
-    justify-content: center;
-    column-gap: 20px;
-    border:none;
-    border-top: rgb(2, 2, 108) solid 1.5px;
-    text-align: center;
-    width:70%;
-    margin:auto;
-    padding-top:20px
-}
-

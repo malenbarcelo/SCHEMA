@@ -1,39 +1,91 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
 
+<% if (locals.successMessage) { %>
+    <div class="successMessage">
+        <i class="fa-solid fa-check"></i>
+        <p><%= successMessage%></p>
+    </div>
+<% } %>
+
 <body class = body-form>
 
-    <h1 class="formTitle">Asignar alumnos a comisión</h1>
+    <h1 class="title1">Asignar alumnos a comisión</h1>
 
-    <form action="/courses/students-assignation" method="POST" name="formAssignStudens">
-        <div class="divSelectCompany">
-            <select name="selectCompany" class="SelectCompany">
-                <option value="default" selected>--Seleccione una institución--</option>
-                <% companies.forEach(company => { %>
-                    <option value="<%= company.company_name %>"><%= company.company_name %></option>
-                <% }) %>
-            </select>
-        </div>
-        <div class="divSelectCourse">
-            <select name="selectCourse" class="SelectCourse">
+    <div class="divAssignationNote">        
+        <p class="pAssignationNote"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de <%= students.length %> alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>
+    </div>
+    <form action="/courses/students-assignation" enctype="multipart/form-data" method="POST" name="formAssignStudents" class="form1">
+        <% if (user.id_user_categories == 1) { %>
+            <div>
+                <select name="selectCompany" class="input1 select1">
+                    <option value="default" selected>--Seleccione una institución--</option>
+                    <% companies.forEach(company => { %>
+                        <option value="<%= company.company_name %>"><%= company.company_name %></option>
+                    <% }) %>
+                </select>
+                <div class="divError1" id="divErrorSelectCompany">
+                    <% if (locals.errors && errors.selectCourse) { %>
+                        <%= errors.selectCourse.msg %> 
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+        <div>
+            <select name="selectCourse" class="input1 select1 <%= locals.errors && errors.selectCourse ? 'isInvalid' : null %>" id="selectCourse">
                 <option value="default" selected>--Seleccione un curso--</option>
                 <% courses.forEach(course => { %>
-                    <option value="<%= course.course_name %>"><%= course.course_name %></option>
+                    <option value="<%= course.course_name %>" <%= locals.oldData && oldData.selectCourse == course.course_name ? 'selected' : null %>><%= course.course_name %></option>
                 <% }) %>
             </select>
+            <div class="divError1" id="divErrorSelectCourse">
+                <% if (locals.errors && errors.selectCourse) { %>
+                    <%= errors.selectCourse.msg %> 
+                <% } %>
+            </div>
         </div>
-        <div class="divSelectCommission">
-            <select name="selectCommission" class="SelectCommission">
+        <div class="divError1"></div>
+        <div>
+            <select name="selectCommission" class="input1 select1 <%= locals.errors && errors.selectCommission ? 'isInvalid' : null %>" id = "selectCommission">
                 <option value="default" selected>--Seleccione una comisión--</option>
-                <% commissions.forEach(commission => { %>
-                    <option value="<%= commission.commission %>"><%= commission.commission + ' [Inicio: ' + commission.start_date + ' --- Fin: ' + commission.end_date + ']'%></option>
-                <% }) %>
+                <% if (locals.oldData && oldData.selectCourse) { %>
+                    <% commissionsFiltered.forEach(commission => { %>
+                        <option value="<%= commission.id %>"><%= commission.commission + ': [inicio: ' + commission.start_date + ' -- fin: ' + commission.end_date + ']' %></option>
+                    <% }) %>
+                <% } %>
             </select>
+            <div class="divError1" id="divErrorSelectCommission">
+                <% if (locals.errors && errors.selectCommission) { %>
+                    <%= errors.selectCommission.msg %> 
+                <% } %>
+            </div>
         </div>
+        <div class="divError1"></div>
         
+        <div class="divFile">
+            <div class="divUploadFile <%= locals.errors && errors.fileAssignStudents ? 'isInvalid' : null %>">
+                <i class="fa-solid fa-file-excel"></i>
+                <input type="file" name="fileAssignStudents" class="uploadFile">
+            </div>
+            <div class="divError1">
+                <% if (locals.errors && errors.fileAssignStudents) { %>
+                    <%= errors.fileAssignStudents.msg %> 
+                <% } %>
+            </div>
+            <div class="divAssignationFileNote">
+                <p class="pAssignationFileNote"><i class="fa-solid fa-circle-info"></i> Para asignar alumnos suba un archivo en formato .xls, xlsx ó xlsm. <br> El mismo debe contar con una sola columna, sin títulos.<br>Ejemplo:</p>
+                <img src="/images/xlsExample.jpg" alt="Ejemplo .xls asignar alumnos" class="xlsExample">
+            </div>  
 
+        </div>
+        <div class="divButtons1">
+            <input type="submit" value="Asignar" class="button1">
+            <input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">
+        </div>
     </form>
 
 </body>
 
 <%- include('../partials/footer') %>
+
+<script src="/js/assignStudents.js"></script>

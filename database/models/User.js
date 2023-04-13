@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
          type: DataTypes.STRING,
          allowNull: false,
       },
+      id_document:{
+         type: DataTypes.INTEGER,
+         allowNull: true,
+      },
       user_email:{
          type: DataTypes.STRING,
          allowNull: false,
@@ -31,7 +35,11 @@ module.exports = (sequelize, DataTypes) => {
       id_companies:{
          type: DataTypes.INTEGER,
          allowNull: false,
-      }
+      },
+      enabled:{
+         type: DataTypes.INTEGER,
+         allowNull: false,
+      },
    }
    const config = {
    tableName : 'users',

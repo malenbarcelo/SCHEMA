@@ -1,0 +1,24 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+    <h1 class="title1">Mis cursos</h1>
+
+    <% courses.forEach(course => { %>
+        <div class="divFlex4" id="<%= course.id_courses %>"><%= course.course_name %><i class="fa-solid fa-plus plus1" id="<%= 'plusMyCourses' + course.id_courses %>"></i><i class="fa-solid fa-minus minus1" id="<%= 'minusMyCourses' + course.id_courses %>"></i></div>
+        <div class="div1" id="<%= 'commissionsCourse' + course.id_courses %>">
+                <% commissions.forEach(commission => { %>
+                    <% if (commission.course_commission_course.id == course.id_courses) { %>
+                        <div class="div2"><a href="/courses/commissions/<%= commission.id %>">Comisión: <%= commission.commission %> [Inicio <%= commission.start_date %> -  Fin <%= commission.end_date %>]</a>
+                            <% if (date <= new Date(commission.end_date + "T00:00:00") || ((date.getDate() == (new Date(commission.end_date + "T00:00:00")).getDate()) && (date.getMonth() == (new Date(commission.end_date + "T00:00:00")).getMonth()) && (date.getFullYear() == (new Date(commission.end_date + "T00:00:00")).getFullYear()))) { %>
+                                <div class="div3">En curso</div>
+                            <% } %>
+                        </div>
+                    <% } %>
+                <% }) %>
+        </div>
+
+    <% }) %>
+
+<%- include('../partials/footer') %>
+
+<script src="/js/myCourses.js"></script>

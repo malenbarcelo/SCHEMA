@@ -1,24 +1,35 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
 
-<h3 class="formTitle">Iniciar sesión</h3>
+<h3 class="title1">Iniciar sesión</h3>
 
-<form action="/users/login" method="POST" name="formLogin" class="formLogin">
+<form action="/users/login" method="POST" name="formLogin" class="form1">
     
-    <div class="divFormLogin">
-        <input type="text" name="formLoginEmail" placeholder="Email" class="inputForm">
+    <div class="divCss1">
+        <input type="text" name="email" placeholder="Email" class="input1 <%= locals.errors && errors.email ? 'isInvalid' : null %>" value="<%= locals.oldData ? oldData.email : null %>">
+        <div class="divError1">
+            <% if (locals.errors && errors.email) { %>
+                <%= errors.email.msg %>
+            <% } %>
+        </div>
     </div>
 
-    <div class="divFormLogin">
-        <input type="text" name="formLoginPassword" placeholder="Contraseña" class="inputForm">
+    <div class="divCss1">
+        <input type="text" name="password" placeholder="Contraseña" class="input1 <%= locals.errors && errors.password ? 'isInvalid' : null %>" >
+        <div class="divError1">
+            <% if (locals.errors && errors.password) { %>
+                <%= errors.password.msg %> 
+            <% } %>
+        </div>
+    </div>
+    
+
+    <div class="">
+        <button type="submit" class="button1">Ingresar</button>
     </div>
 
-    <div class="divFormLogin">
-        <button type="submit" class="buttonForm">Ingresar</button>
-    </div>
-
-    <div class="divFormHrefs">
-        <p class="pLoginForm"><a href="" class="aLoginForm">Olvidé mi contraseña</a></p>                 
+    <div class="divForm1">
+        <p class="p1"><a href="" class="a1">Olvidé mi contraseña</a></p>                 
     </div>
 </form>
 
