@@ -2,6 +2,7 @@ const db = require('../../database/models')
 const sequelize = require('sequelize');
 const readXlsFile = require('read-excel-file/node')
 const {validationResult} = require('express-validator')
+const functions = require('./functions/filterCommissionFunctions')
 
 const coursesController = {
     createCourse: async(req,res) => {
@@ -27,7 +28,7 @@ const coursesController = {
             const keys = Object.keys(req.body)
             const notSimulatorKey = ['selectCompany','courseName','courseDescription']
             const resultValidation = validationResult(req)
-
+           
             if(resultValidation.errors.length > 0){
                 return res.render('courses/createCourse',{
                     errors:resultValidation.mapped(),
@@ -40,7 +41,6 @@ const coursesController = {
             }
 
             //Get company
-
             let company = ''
             let idCompany = ''
 
@@ -67,6 +67,7 @@ const coursesController = {
             if(!courseNumber.max){
                 courseNumber.max = 0
             }
+
             //Create course
             await db.Courses.create({
                 course_name: req.body.courseName,
@@ -75,10 +76,11 @@ const coursesController = {
                 course_number:courseNumber.max + 1,
                 enabled:1
             })
+
             //Associate simulators to course
             const idCourse = await db.Courses.findOne({
                 attributes:['id'],
-                where:{course_name:req.body.courseName}
+                where:{course_name:req.body.courseName, id_companies:idCompany}
                 })
                 //get course id
                 for (let i = 0; i < keys.length; i++) {
@@ -90,13 +92,13 @@ const coursesController = {
                 }
             }
 
-            const successMessage = true
+            const successMessage1 = true
 
             return res.render('courses/createCourse',{
                 title:'Crear curso',
                 simulators,
                 companies,
-                successMessage,
+                successMessage1,
                 user:req.session.userLogged,
             })
 
@@ -180,14 +182,14 @@ const coursesController = {
                 enabled:1
             })
 
-            const successMessage = 'Comisión creada con éxito'
+            const successMessage1 = true
 
             return res.render('courses/createCommission',{
                 title:'Crear comisión',
                 companies,
                 courses,
                 teachers,
-                successMessage,
+                successMessage1,
                 user:req.session.userLogged
             })
         }catch(error){
@@ -281,8 +283,6 @@ const coursesController = {
             })
 
             const studentsCommissions= []
-
-            console.log(studentsToAssign)
 
             for (let i = 0; i < studentsToAssign.length; i++) {
                 const validation = await db.Course_commissions_students.findOne({
@@ -401,25 +401,14 @@ const coursesController = {
             const idSimulatorsExercises = []
             let idStudents = []
 
-            const commission = await db.Course_commissions.findOne({
-                where:{id:idCommission},
-                nest:true,
-                raw:true,
-                include: [{all: true}],
-            })
+            //get commission
+            const commission = await functions.commissionSelected(req.params.idCommission)
 
-            //find simulators and add to data
-            const simulators = await db.Courses_simulators.findAll({
-                where:{id_courses:commission.course_commission_course.id},
-                attributes:['id'],
-                nest:true,
-                raw:true,
-                include: [{association: 'course_simulator'}]
-            })
-
-            //add to data and get an array with ids
+            //get simulators and add to data. 
+            //get also an array with simulators ids
+            const simulators = await functions.commissionSimulators(commission.id_courses)
             simulators.forEach(simulator => {
-                data.push({'simulatorId': simulator.course_simulator.id,'simulatorName': simulator.course_simulator.simulator_name})
+                data.push({'simulatorId': simulator.id,'simulatorName': simulator.course_simulator.simulator_name})
                 idSimulators.push(simulator.id)
             });
 
@@ -560,7 +549,7 @@ const coursesController = {
 
                     //add info to exercises data
                     exercisesData.push({'exerciseId':exercises[j].id,'exerciseName':exercises[j].exercise_name,'exercisesSteps':exercisesSteps})
-                }
+                }                
 
                 for (let k = 0; k < studentsData.length; k++) {
                     studentsResults.push({'studentId':studentsData[k].studentId,'firstName':studentsData[k].firstName,'lastName':studentsData[k].lastName,'exercisesResults':[]})
@@ -607,10 +596,21 @@ const coursesController = {
                                 }
                             }
 
-                            studentsResults[k].exercisesResults.push({'excerciseId':exercises[l].id,'date':lastDate.date,'grade':exerciseResult.grade,'durationSecs':exerciseResult.duration_secs,'idExercisesResults':exerciseResult.id,'exercisesSteps':fullStepsResults})
-
+                            studentsResults[k].exercisesResults.push({'exerciseId':exercises[l].id,'date':lastDate.date,'grade':exerciseResult.grade,'durationSecs':exerciseResult.duration_secs,'idExercisesResults':exerciseResult.id,'exercisesSteps':fullStepsResults})
+                            
                         }else{
-                            studentsResults[k].exercisesResults.push({'excerciseId':exercises[l].id,'date':'-','grade':'-','durationSecs':'-','idExercisesResults':'-','exercisesSteps':[]})
+                            const fullStepsResults = []
+                            const exercise = exercisesData.filter(exercise => exercise.exerciseId == exercises[l].id)
+                            const exerciseSteps = exercise[0].exercisesSteps
+
+                            exerciseSteps.forEach(exerciseStep => {
+                                fullStepsResults.push({'id':'-','id_exercises_results':'-','description':exerciseStep.description,'log_time':'-','type':'-','obserations':'-','passed':'-'})
+                            })
+
+                            //exercises[l].id
+
+                            studentsResults[k].exercisesResults.push({'exerciseId':exercises[l].id,'date':'-','grade':'-','durationSecs':'-','idExercisesResults':'-','exercisesSteps':fullStepsResults})
+
                         }
                     }
                 }
@@ -618,7 +618,8 @@ const coursesController = {
                 data[i].studentsResults = studentsResults
             }
 
-            //return res.send(simulatorExercises)
+                //return res.send('hola' + data[0].studentsResults[1].exercisesResults[0].excerciseId)
+                //return res.send(data)
 
         return res.render('courses/commissions',{title:'Comisiones',data,commission})
     }catch(error){

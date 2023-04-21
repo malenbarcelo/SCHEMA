@@ -30,14 +30,12 @@ const apisController = {
                     nest:true,
                     raw:true})
             }
-            
 
             return res.status(200).json(coursesFiltered)
 
         }catch(error){
             return res.send('Ha ocurrido un error')
         }
-        
     },
     teacherExercises:async(req,res) =>{
         try{
@@ -82,9 +80,125 @@ const apisController = {
         }catch(error){
             return res.send('Ha ocurrido un error')
         }
+    },
+    notAssignedTokens: async(req,res) =>{
+        const notAssignedTokens = await db.Tokens.findAll({
+            where:{id_users:null},
+            nest:true
+        })
+        return res.status(200).json(notAssignedTokens)
+    },
+    companies: async(req,res) =>{
+        const companies = await db.Companies.findAll({
+            nest:true
+        })
+        return res.status(200).json(companies)
+    },
+    studentsExercises: async(req,res) =>{
 
+        const idCommission = req.params.idCommission
 
-    }
+        const studentsExercises = await db.Course_commissions_students.findAll({
+            where:{id_course_commissions: idCommission},
+            raw:true,
+            nest:true,  
+            include:[{all:true}]
+        })
+
+        return res.status(200).json(studentsExercises)
+    },
+    exercisesResults: async(req,res) =>{
+
+        const idExercise = req.params.idExercise
+        const idStudent = req.params.idStudent
+
+        const exercisesResults = await db.Exercises_results.findAll({
+            where:{id_exercises: idExercise,id_users:idStudent},
+            order:[['date','DESC']],
+            raw:true,
+            nest:true,  
+            include:[{all:true}]
+        })
+
+        return res.status(200).json(exercisesResults)
+    },
+    
+    exercisesAnswers: async(req,res) =>{
+
+        const idExerciseResult = req.params.idExerciseResult
+        
+        const exercisesAnswers = await db.Exercises_answers.findAll({
+            where:{id_exercises_results: idExerciseResult},
+            order:[['description','ASC']],
+            raw:true,
+            nest:true,
+            include:[{all:true}]
+        })
+
+        return res.status(200).json(exercisesAnswers)
+    },
+    exercisesSteps: async(req,res) =>{
+
+        const idExercise = req.params.idExercise
+        
+        const exerciseSteps = await db.Exercises_answers.findAll({
+            where:{id_exercises_results: idExerciseResult},
+            order:[['description','ASC']],
+            raw:true,
+            nest:true,
+            include:[{all:true}]
+        })
+
+        return res.status(200).json(exercisesanswers)
+    },
+    storeResults: async(req,res) =>{
+        try{
+            const keys = Object.keys(req.body.answers)
+
+            //store in exercises_results
+            await db.Exercises_results.create({
+                id_exercises: req.body.id_exercises,
+                id_users: req.body.id_users,
+                id_simulators:req.body.id_simulators,
+                date: req.body.date,
+                grade: req.body.grade,
+                duration_secs: req.body.duration_secs
+            })
+
+            //get id of exercises_results
+            const idExercisesResults = await db.Exercises_results.findOne({
+                where:{
+                    id_exercises: req.body.id_exercises,
+                    id_users: req.body.id_users,
+                    id_simulators: req.body.id_simulators,
+                    date: req.body.date,
+                    grade: req.body.grade,
+                    duration_secs: req.body.duration_secs
+                },
+                attributes:[[sequelize.fn('max', sequelize.col('id')),'max']],
+                raw:true,
+                nest:true
+                })
+
+            //store answers
+            for (let i = 0; i < keys.length; i++) {
+                await db.Exercises_answers.create({
+                    id_exercises_results: idExercisesResults.max,
+                    id_exercises:req.body.id_exercises,
+                    id_users:req.body.id_users,
+                    id_simulators:req.body.id_simulators,
+                    description: req.body.answers[i].description,
+                    log_time: req.body.answers[i].log_time,
+                    type: req.body.answers[i].type,
+                    observations: req.body.answers[i].observations
+                })
+            }
+            return res.status(200).json(req.body)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
+}
+    
 }
 module.exports = apisController
 

@@ -1,10 +1,11 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
+<%- include('../partials/userLogged') %>
 
-<h3 class="title1">Crear una institución</h3>
+<div class="divForm">
+    <h3 class="title1">Crear una institución</h3>
 
-<form action="/users/create-company" method="POST" name="formCreateCompany" class="form1">
-    
+<form action="/users/create-company" method="POST" name="formCreateCompany" class="form1">    
     <div>
         <input type="text" name="company" placeholder="Institución" class="input1 <%= locals.errors && errors.company ? 'isInvalid' : null %>" value="<%= locals.oldData ? oldData.company : null %>">
         <div class="divError1">
@@ -45,4 +46,7 @@
 
 </form>
 
-<%- include('../partials/footer') %>
+
+</div>
+
+

@@ -1,4 +1,4 @@
-//Middleware de ruta -- Routed that can be reached by general administrator and compnay administrators
+//Middleware de ruta -- Routes that can be reached by general administrator and company administrators
 function admsMiddleware(req,res,next){
     if(!req.session.userLogged){
         return res.redirect('/users/login')

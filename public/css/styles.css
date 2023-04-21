@@ -1,5 +1,5 @@
 body{
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'IBM Plex Sans';
 }
 
 a{
@@ -23,7 +23,7 @@ a{
 .button1{
     border-radius:0px;
     border:none;
-    background-color:rgb(5, 5, 160);
+    background-color:#051435;;
     padding:6px 8px;
     color: white;
     width: 70px;
@@ -34,7 +34,7 @@ a{
 }
 
 .button1:hover,.button2:hover{
-    background-color: rgb(2, 2, 108);
+    background-color: #082157;;
     cursor: pointer;
 }
 
@@ -69,6 +69,84 @@ a{
     border-radius: 5px;
     color: white;
 }
+
+.div4{
+    margin-bottom:10px
+}
+
+.div5{
+    text-align: center;
+    font-size: 12px;
+    margin:auto;
+    margin-bottom:15px;
+    width: 450px;
+}
+
+.div6{
+    border: rgb(230, 230, 232) solid 1px;
+    width: 350px;
+    margin: auto;  
+}
+
+.div7{
+    margin-top:0px;
+    padding:5px;
+}
+
+.div8{
+    padding:0px 10px 10px 10px;
+    margin-left:10px;
+    background-color: rgb(244, 240, 240);
+    border-radius: 5px;
+}
+
+.div9{
+    display:none
+}
+
+.div10{
+    position:absolute;
+    background-color:  rgb(230, 228, 228);
+    z-index: 1;
+    display:none;
+    border-radius:5px;
+    padding:10px;
+    padding-top: 0px;
+}
+
+.div12{
+    display: none;
+}
+
+.div13{
+    position:absolute;
+    right:5px;
+    font-size: 13px;
+    padding-right:3px;
+    padding-top:2px;
+    cursor: pointer;
+    
+}
+
+.div14{
+    margin-top:17px;
+    font-size:12px;
+}
+
+.div15{
+    margin-top:0px;
+    font-size:12px;
+    margin-bottom:10px
+}
+
+.div16{
+    font-size:11px;
+    margin-bottom:3px;
+    width: 60px;
+    text-align: center;
+    border-bottom:black solid 1px
+}
+
 
 .divButtons1{
     margin-top:15px
@@ -134,13 +212,72 @@ a{
     column-gap: 10px;
 }
 
-.divForm1{
-    margin-top:15px;
-    margin-bottom:170px
+.divFlex6{
+    display: flex;
+    justify-content: space-between;
+    column-gap: 10px;
+    width: 180px;
+    margin:auto;
+    margin-bottom:5px;
+    border-top: rgb(199, 198, 198) solid 1px;
+    border-bottom: rgb(199, 198, 198) solid 1px;
+    padding:3px;
+    padding-right:5px;
+    
+}
+
+.divFlex6Display{
+    display:none
+}
+
+.divFlex7{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 5px;
+    margin: auto;
+    padding:5px 0px;
+    
+}
+.divFlex8{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.divFlex9{
+    display: flex;
+    column-gap: 5px;
+}
+
+.divForm{
+    width: 60%;
+    margin-left:25%;
+    }
+
+.divLogin{
+    width: 60%;
+    margin-left:25%;
+    margin-top: 150px;
 }
 
 .exerciseSelected{
     border:black solid 1px;
+}
+
+.fa-circle-info{
+    font-size: 13px;
+    color:rgb(5, 5, 160)
+}
+
+.fa-file-excel{
+    font-size: 20px;
+    color: green;
+}
+
+.fa-triangle-exclamation{
+    color:rgb(223, 223, 92);
+    font-size:15px
 }
 
 .form1{
@@ -156,6 +293,11 @@ a{
     height: 30px;
     width:300px;
     padding-left: 10px;
+    font-family: 'IBM Plex Sans';
+}
+
+.input1:focus, .input2:focus{
+    outline:none
 }
 
 .input2{
@@ -172,9 +314,11 @@ a{
     border:none;
 }
 
-.input1:focus, .input2:focus{
-    outline:none
+.input4{
+    margin-top: 0px;
+    font-size: 12px;
 }
+
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -208,12 +352,44 @@ input::-webkit-inner-spin-button {
     margin-bottom:10px
 }
 
+.p2{
+    width:350px;
+    text-align: center;
+    margin: auto;
+}
+
+.p3{
+    margin: auto;
+    font-size: 12px;
+    text-align: left;
+}
+
+.p4{
+    text-align: center;
+    font-size: 12px;
+}
+
+.p5{
+    margin: 0px;
+    font-size: 12px;
+}
+
 .plus1{
     font-size: 12px;
     cursor: pointer;
     position: absolute;
     left:93%;
 }
+
+.plus2{
+    color:#0046FF
+}
+
+.plus2:hover{
+    cursor: pointer;
+}
+
+
 
 .select1{
     border:none;
@@ -278,6 +454,18 @@ input::-webkit-inner-spin-button {
 
 .title4{
     font-size: 15px;
+}
+
+.title5{
+    font-size: 12px;
+}
+.xlsExample{
+    width: 100px;
+}
+.xlsExample2{
+    width: 300px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 

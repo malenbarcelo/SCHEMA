@@ -25,6 +25,6 @@ const upload = multer({storage: storage})
 router.get('/generate',admMiddleware,tokensController.generate)
 router.post('/generate',admMiddleware, tokensFormsValidations.generateTokensFormValidations,tokensController.store)
 router.get('/assignation',admsMiddleware,tokensController.assignation)
-router.post('/assignation',admsMiddleware,upload.single('fileAssignTokens'),tokensController.assignationProcess)
+router.post('/assignation',admsMiddleware,upload.single('fileAssignTokens'),tokensFormsValidations.assignTokensFormValidations,tokensController.assignationProcess)
 
 module.exports = router

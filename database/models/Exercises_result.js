@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
          type: DataTypes.INTEGER,
          allowNull: false,
       },
+      id_simulators:{
+         type: DataTypes.INTEGER,
+         allowNull: false,
+      },
       date:{
          type: DataTypes.STRING,
          allowNull: false,

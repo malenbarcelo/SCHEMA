@@ -16,9 +16,20 @@ const coursesFormsValidations = {
         body('courseName')
             .notEmpty().withMessage('Ingrese un nombre para el curso que desea crear')
             .custom(async(value,{ req }) => {
+                var idCompany = ''
+                if (req.session.userLogged.id_user_categories == 1) {
+                    const company = await db.Companies.findOne({
+                        where:{company_name:req.body.selectCompany},
+                        raw:true
+                    })
+                    idCompany = company.id
+                }else{
+                    idCompany = req.session.userLogged.id_companies
+                }
+
                 const courseName = await db.Courses.findOne({where:{
                     course_name:req.body.courseName,
-                    id_companies: req.session.userLogged.id_companies
+                    id_companies: idCompany
                 }})
                 if(courseName){
                     throw new Error('Ya existe un curso con el nombre "' + req.body.courseName + '" en la institución')
@@ -42,6 +53,13 @@ const coursesFormsValidations = {
             }),
     ],
     createCommissionFormValidation: [
+        body('selectCompany')
+        .custom((value,{ req }) => {
+            if(req.session.userLogged.id_user_categories == 1 && req.body.selectCompany == 'default'){
+                throw new Error('Seleccione una institución')
+            }
+            return true
+        }),
         body('courseName')
             .custom(async(value,{ req }) => {
                 if(req.body.courseName == 'default'){

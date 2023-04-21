@@ -1,7 +1,8 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
 
-<h3 class="title1">Iniciar sesión</h3>
+<div class="divLogin">
+    <h3 class="title1">Iniciar sesión</h3>
 
 <form action="/users/login" method="POST" name="formLogin" class="form1">
     
@@ -15,7 +16,7 @@
     </div>
 
     <div class="divCss1">
-        <input type="text" name="password" placeholder="Contraseña" class="input1 <%= locals.errors && errors.password ? 'isInvalid' : null %>" >
+        <input type="password" name="password" placeholder="Contraseña" class="input1 <%= locals.errors && errors.password ? 'isInvalid' : null %>" >
         <div class="divError1">
             <% if (locals.errors && errors.password) { %>
                 <%= errors.password.msg %> 
@@ -28,9 +29,15 @@
         <button type="submit" class="button1">Ingresar</button>
     </div>
 
-    <div class="divForm1">
-        <p class="p1"><a href="" class="a1">Olvidé mi contraseña</a></p>                 
-    </div>
+    
 </form>
 
-<%- include('../partials/footer') %>
+
+</div>
+
+
+
+
+
+
+

@@ -1,70 +1,67 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
+<%- include('../partials/userLogged') %>
 
-<% if (locals.successMessage) { %>
+<% if (locals.successMessage1) { %>
     <script>
-        swal("", "Curso creado con éxito", "success")
+        alertify.success('Curso creado con éxito');
     </script>
 <% } %>
 
-<body class = body-form>
-
-    <h1 class="title1">Crear curso</h1>
-
-    <form action="/courses/create-course" method="POST" name="formCreateCourse" class="form1">
-        <% if (user.id_user_categories == 1) { %>
-            <div class="divSelectCompany">
-                <select name="selectCompany" class="input1 select1 <%= locals.errors && errors.selectCompany ? 'isInvalid' : null %>">
-                    <option value="default" selected>--Seleccione una institución--</option>
-                    <% companies.forEach(company => { %>
-                        <option value="<%= company.company_name %>"><%= company.company_name %></option>
-                    <% }) %>
-                </select>
+<div class="divForm">
+        <h1 class="title1">Crear curso</h1>
+    
+        <form action="/courses/create-course" method="POST" name="formCreateCourse" class="form1">
+            <% if (user.id_user_categories == 1) { %>
+                <div class="divSelectCompany">
+                    <select name="selectCompany" class="input1 select1 <%= locals.errors && errors.selectCompany ? 'isInvalid' : null %>">
+                        <option value="default" selected>--Seleccione una institución--</option>
+                        <% companies.forEach(company => { %>
+                            <% if (company.company_name != 'Schema') { %>
+                                <option value="<%= company.company_name %>" <%= locals.oldData && oldData.selectCompany == company.company_name ? 'selected' : null %>><%= company.company_name %></option>
+                            <% } %>
+                            
+                        <% }) %>
+                    </select>
+                    <div class="divError1">
+                        <% if (locals.errors && errors.selectCompany) { %>
+                            <%= errors.selectCompany.msg %>
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
+    
+            <div>
+                <input type="text" name="courseName" placeholder="Nombre del curso" class="input1 <%= locals.errors && errors.courseName ? 'isInvalid' : null %>" value="<%= locals.oldData ? oldData.courseName : null %>">
                 <div class="divError1">
-                    <% if (locals.errors && errors.selectCompany) { %>
-                        <%= errors.selectCompany.msg %>
+                    <% if (locals.errors && errors.courseName) { %>
+                        <%= errors.courseName.msg %>
                     <% } %>
                 </div>
             </div>
-        <% } %>
-
-        <div>
-            <input type="text" name="courseName" placeholder="Nombre del curso" class="input1 <%= locals.errors && errors.courseName ? 'isInvalid' : null %>" value="<%= locals.oldData ? oldData.courseName : null %>">
-            <div class="divError1">
-                <% if (locals.errors && errors.courseName) { %>
-                    <%= errors.courseName.msg %>
-                <% } %>
+            <div>
+                <input type="text" name="courseDescription" placeholder="Descripción" class="input1" value="<%= locals.oldData ? oldData.courseDescription : null %>">
+                <div class="divError1"></div>
             </div>
-        </div>
-        <div>
-            <input type="text" name="courseDescription" placeholder="Descripción" class="input1 <%= locals.errors && errors.email ? 'isInvalid' : null %>" value="<%= locals.oldData ? oldData.email : null %>">
-            <div class="divError1">
-                <% if (locals.errors && errors.email) { %>
-                    <%= errors.email.msg %>
-                <% } %>
+    
+            <div>
+                <h1 class="title2">Simuladores asociados al curso</h1>
+                <div class="divError1">
+                    <% if (locals.errors && errors.simulators) { %>
+                        <%= errors.simulators.msg %>
+                    <% } %>
+                </div>
+                <% simulators.forEach(simulator => { %>
+                        <div class="divFlex2">
+                            <input type="checkbox" name="<%= simulator.dataValues.id%>" value="<%= simulator.dataValues.simulator_name%>">
+                            <label for="<%= simulator.dataValues.id%>" value="<%= simulator.dataValues.simulator_name%>" class="label2"><%= simulator.dataValues.simulator_name%></label>
+                        </div>
+                    <% }) %>
             </div>
-        </div>
-
-        <div>
-            <h1 class="title2">Simuladores asociados al curso</h1>
-            <div class="divError">
-                <% if (locals.errors && errors.simulators) { %>
-                    <%= errors.simulators.msg %>
-                <% } %>
+            <div class="divButtons1">
+                <input type="submit" value="Crear" class="button1">
+                <!---<input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">--->
             </div>
-            <% simulators.forEach(simulator => { %>
-                    <div class="divFlex2">
-                        <input type="checkbox" name="<%= simulator.dataValues.id%>" value="<%= simulator.dataValues.simulator_name%>">
-                        <label for="<%= simulator.dataValues.id%>" value="<%= simulator.dataValues.simulator_name%>" class="label2"><%= simulator.dataValues.simulator_name%></label>
-                    </div>
-                <% }) %>
-        </div>
-        <div class="divButtons1">
-            <input type="submit" value="Crear" class="button1">
-            <input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">
-        </div>
+        </form>
+</div>
 
-    </form>
-</body>
-
-<%- include('../partials/footer') %>

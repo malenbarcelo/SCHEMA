@@ -29,7 +29,7 @@ router.get('/create-commission',admsMiddleware,coursesController.createCommissio
 router.post('/create-commission',admsMiddleware,coursesFormsValidations.createCommissionFormValidation,coursesController.storeCommission)
 router.get('/students-assignation',admsMiddleware,coursesController.assignStudents)
 router.post('/students-assignation',admsMiddleware,upload.single('fileAssignStudents'),coursesFormsValidations.assignStudentsFormValidations,coursesController.processAssignStudents)
-router.get('/teacher-courses',coursesController.myCourses)
+router.get('/my-courses',coursesController.myCourses)
 router.get('/commissions/:idCommission',coursesController.filterCommission)
 
 module.exports = router

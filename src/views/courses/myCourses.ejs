@@ -1,6 +1,8 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
+<%- include('../partials/userLogged') %>
 
+<div class="divForm">
     <h1 class="title1">Mis cursos</h1>
 
     <% courses.forEach(course => { %>
@@ -19,6 +21,10 @@
 
     <% }) %>
 
-<%- include('../partials/footer') %>
+</div>
+
+    
+
+
 
 <script src="/js/myCourses.js"></script>

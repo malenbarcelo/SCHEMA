@@ -1,5 +1,6 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
+<%- include('../partials/userLogged') %>
 
 <% if (locals.successMessage) { %>
     <div class="successMessage">
@@ -8,12 +9,11 @@
     </div>
 <% } %>
 
-<body class = body-form>
-
+<div class="divForm">
     <h1 class="title1">Asignar alumnos a comisión</h1>
 
-    <div class="divAssignationNote">        
-        <p class="pAssignationNote"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de <%= students.length %> alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>
+    <div class="div5">        
+        <p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de <%= students.length %> alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>
     </div>
     <form action="/courses/students-assignation" enctype="multipart/form-data" method="POST" name="formAssignStudents" class="form1">
         <% if (user.id_user_categories == 1) { %>
@@ -62,30 +62,30 @@
         </div>
         <div class="divError1"></div>
         
-        <div class="divFile">
-            <div class="divUploadFile <%= locals.errors && errors.fileAssignStudents ? 'isInvalid' : null %>">
+        <div class="div6">
+            <div class="divFlex7 <%= locals.errors && errors.fileAssignStudents ? 'isInvalid' : null %>">
                 <i class="fa-solid fa-file-excel"></i>
-                <input type="file" name="fileAssignStudents" class="uploadFile">
+                <input type="file" name="fileAssignStudents" class="input4">
             </div>
             <div class="divError1">
                 <% if (locals.errors && errors.fileAssignStudents) { %>
                     <%= errors.fileAssignStudents.msg %> 
                 <% } %>
             </div>
-            <div class="divAssignationFileNote">
-                <p class="pAssignationFileNote"><i class="fa-solid fa-circle-info"></i> Para asignar alumnos suba un archivo en formato .xls, xlsx ó xlsm. <br> El mismo debe contar con una sola columna, sin títulos.<br>Ejemplo:</p>
+            <div class="div7">
+                <p class="p3"><i class="fa-solid fa-circle-info"></i> Para asignar alumnos suba un archivo en formato .xls, xlsx ó xlsm. <br> El mismo debe contar con una sola columna, sin títulos.<br>Ejemplo:</p>
                 <img src="/images/xlsExample.jpg" alt="Ejemplo .xls asignar alumnos" class="xlsExample">
             </div>  
 
         </div>
         <div class="divButtons1">
             <input type="submit" value="Asignar" class="button1">
-            <input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">
+            <!---<input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">--->
         </div>
-    </form>
-
 </body>
+</div>
 
-<%- include('../partials/footer') %>
+    
+
 
 <script src="/js/assignStudents.js"></script>

@@ -1,15 +1,14 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
+<%- include('../partials/userLogged') %>
 
-<% if (locals.successMessage) { %>
-    <div class="successMessage">
-        <i class="fa-solid fa-check"></i>
-        <p><%= successMessage%></p>
-    </div>
+<% if (locals.successMessage1) { %>
+    <script>
+        alertify.success('Comisión creada con éxito');
+    </script>
 <% } %>
 
-<body class = body-form>
-
+<div class="divForm">
     <h1 class="title1">Crear comisión</h1>
 
     <form action="/courses/create-commission" method="POST" name="formCreateCommission" class="form1">
@@ -18,7 +17,10 @@
                 <select name="selectCompany" class="input1 select1 <%= locals.errors && errors.selectCompany ? 'isInvalid' : null %>">
                     <option value="default" selected>--Seleccione una institución--</option>
                     <% companies.forEach(company => { %>
-                        <option value="<%= company.company_name %>"><%= company.company_name %></option>
+                        <% if (company.company_name != 'Schema') { %>
+                            <option value="<%= company.company_name %>" <%= locals.oldData && oldData.selectCompany == company.company_name ? 'selected' : null %>><%= company.company_name %></option>
+                        <% } %>
+                        
                     <% }) %>
                 </select>
                 <div class="divError1">
@@ -74,10 +76,10 @@
         </div>
         <div class="divButtons1">
             <input type="submit" value="Crear" class="button1">
-            <input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">
+            <!---<input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">--->
         </div>
     </form>
+</div>
 
-</body>
+    
 
-<%- include('../partials/footer') %>

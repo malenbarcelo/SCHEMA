@@ -5,8 +5,7 @@ const functions = require('./functions/tokensFunctions')
 
 const usersController = {
     login: (req,res) => {
-        return res.render('users/login',{title:'Iniciar Sesión'})
-        
+        return res.render('users/login',{title:'Iniciar Sesión'})        
     },
     processLogin: async(req, res) => {
         try{
@@ -39,7 +38,7 @@ const usersController = {
                 return res.redirect('/tokens/generate')
             }
             if (userToLogin.id_user_categories == 3 || userToLogin.id_user_categories == 2) {
-                return res.redirect('/courses/teacher-courses')
+                return res.redirect('/courses/my-courses')
             }
         }catch(error){
                 res.send('Ha ocurrido un error')
@@ -92,14 +91,12 @@ const usersController = {
             const token = await functions.tokenGenerator() //new token number
             await functions.tokenStore(token,idCompany.id,2,idUser.id) //store token in database
             
-            const successMessage1 = 'Se ha creado la empresa ' + req.body.company + ' con éxito. Ya puede asignar licencias a la institución. Tenga en cuenta que la misma ya tiene una licencia de administrador generada'
-            const successMessage2 = 'Se ha creado el usuario de administrador ' + req.body.email + ' y se ha asigando a un nuevo token'
+            const successMessage2 = 'Se ha creado la institución ' + req.body.company
             const companies = await db.Companies.findAll()
             
             return res.render('tokens/tokensGeneration',{
             title:'Crear token',
             companies,
-            successMessage1,
             successMessage2
             })
             
@@ -108,7 +105,7 @@ const usersController = {
         }
     },
     changePassword: (req,res) =>{
-        return res.send('hola')
+        return res.send('')
     },
     processChangePassword: async(req,res) =>{
         try{
@@ -136,10 +133,10 @@ const usersController = {
             req.session.userLogged = userToLogin
             if (userToLogin.id_user_categories == 1) {
                 return res.redirect('/tokens/generate')
+            }else{
+                return res.redirect('/courses/my-courses')
             }
-            if (userToLogin.id_user_categories == 3 || userToLogin.id_user_categories == 2) {
-                return res.redirect('/courses/teacher-courses')
-            }
+            
             
         }catch(error){
             return res.send('Ha ocurrido un error')

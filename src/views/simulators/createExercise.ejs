@@ -1,14 +1,22 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
+<%- include('../partials/userLogged') %>
 
-<h1 class="title1">Crear ejercicio</h1>
+<% if (locals.successMessage) { %>
+    <script>
+        alertify.success('Ejercicio creado con éxito');
+    </script>
+<% } %>
+
+<div class="divForm">
+    <h1 class="title1">Crear ejercicio</h1>
 
 <form action="/simulators/create-exercise" method="POST" name="formCreateExercise" class="form1">
     <div>
-        <select name="selectSimulator" class="input1 select1 <%= locals.errors && errors.selectCompany ? 'isInvalid' : null %>">
+        <select name="selectSimulator" class="input1 select1 <%= locals.errors && errors.selectSimulator ? 'isInvalid' : null %>">
             <option value="default" selected>--Seleccione un simulador--</option>
             <% simulators.forEach(simulator => { %>
-                <option value="<%= simulator.id %>"><%= simulator.simulator_name %></option>
+                <option value="<%= simulator.id %>" <%= locals.oldData && oldData.selectSimulator == simulator.id ? 'selected' : null %>><%= simulator.simulator_name %></option>
             <% }) %>
         </select>
         <div class="divError1">
@@ -35,10 +43,11 @@
     </div>
     <div>
         <input type="submit" value="Crear" class="button1">
-        <input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">
+        <!---<input type="button" value="Cancelar" onclick="window.location.href='/users/profile'" class="button1">--->
     </div>
 </form>
 
-<script src="/js/createSimulator.js"></script>
+</div>
 
-<%- include('../partials/footer') %>
+
+

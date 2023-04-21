@@ -43,7 +43,12 @@ module.exports = (sequelize, DataTypes) => {
       Course_commission.belongsTo(models.Courses,{
           as:'course_commission_course',
           foreignKey: 'id_courses'
-      })
+      }),
+      Course_commission.hasMany(models.Course_commissions_students,{
+         as:'course_commission_student',
+         foreignKey: 'id_course_commissions'
+     })
+
    }
 
    return Course_commission
