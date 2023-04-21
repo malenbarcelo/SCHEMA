@@ -60,7 +60,7 @@ CREATE TABLE schema_db.simulators (
 /*Create table courses*/
 CREATE TABLE schema_db.courses (
     id INT NOT NULL AUTO_INCREMENT,
-    course_name VARCHAR(50) NOT NULL UNIQUE,
+    course_name VARCHAR(50) NOT NULL,
     course_description VARCHAR(150),
     course_number INT NOT NULL,    
     id_companies INT NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE schema_db.courses_simulators (
 CREATE TABLE schema_db.exercises (
     id INT NOT NULL AUTO_INCREMENT,
     exercise_name VARCHAR(50) NOT NULL,
-    exercise_description VARCHAR(50) NOT NULL,
+    exercise_description VARCHAR(50),
     id_simulators INT NOT NULL,
     enabled INT NOT NULL,
     PRIMARY KEY (id),
@@ -119,23 +119,30 @@ CREATE TABLE schema_db.exercises_results (
     id INT NOT NULL AUTO_INCREMENT,
     id_exercises INT NOT NULL,
     id_users INT NOT NULL,
+    id_simulators INT NOT NULL,
     date VARCHAR(50) NOT NULL,
     grade DECIMAL(5,2) NOT NULL,
     duration_secs INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_exercises) REFERENCES exercises(id),
-    FOREIGN KEY (id_users) REFERENCES users(id)   
+    FOREIGN KEY (id_users) REFERENCES users(id),
+    FOREIGN KEY (id_simulators) REFERENCES simulators(id)   
 );
 
 /*Create table exercises_answers*/
 CREATE TABLE schema_db.exercises_answers (
     id INT NOT NULL AUTO_INCREMENT,
     id_exercises_results INT NOT NULL,
+    id_exercises INT NOT NULL,
+    id_users INT NOT NULL,
+    id_simulators INT NOT NULL,
     description VARCHAR(100) NOT NULL,
     log_time INT NOT NULL,
     type VARCHAR(100) NOT NULL,
     observations VARCHAR(500),
     PRIMARY KEY (id),
-    FOREIGN KEY (id_exercises_results) REFERENCES exercises_results(id)
+    FOREIGN KEY (id_exercises_results) REFERENCES exercises_results(id),
+    FOREIGN KEY (id_exercises) REFERENCES exercises(id),
+    FOREIGN KEY (id_users) REFERENCES users(id)
 );
 
