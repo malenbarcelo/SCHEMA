@@ -1,6 +1,5 @@
 const express = require('express')
 const usersController = require('../controllers/usersController.js')
-const exercisesController = require('../controllers/exercisesController.js')
 const apisController = require('../controllers/apisController.js')
 const apisMiddleware = require('../middlewares/apisMiddleware.js')
 
