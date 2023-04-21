@@ -11,11 +11,8 @@ header{
     margin-bottom: 0px;
 }
 
-
-
 .schemaLogo{
     height: 50px;
-
 }
 
 .a-header-menu{
@@ -84,6 +81,7 @@ li{
     text-align: right;
     padding-right: 15px;
 }
+
 .userLoggedName{
     margin-top:3px;
     font-weight: bold;

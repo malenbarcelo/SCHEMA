@@ -2,8 +2,6 @@
 <%- include('../partials/header') %>
 <%- include('../partials/userLogged') %>
 
-
-
 <% if (locals.successMessage1) { %>
     <script>
         alertify.success('Tokens generados con éxito');
@@ -15,14 +13,20 @@
     </script>
 <% } %>
 
-<div class="userLogged">
+<div class="userLogged1">
     <% if (locals.isLogged) { %>
-        <div class="userLoggedName"><%= userLogged.first_name + ' ' + userLogged.last_name%></div>
-        <div class="userLoggedLogout"><a href="/users/logout" class= "aUserLogged">Cerrar sesión</a></div> 
+        <div class="userLoggedName1"><%= userLogged.first_name + ' ' + userLogged.last_name%></div>
+        <div class="userLoggedLogout1"><a href="/users/logout" class= "aUserLogged1">Cerrar sesión</a></div> 
     <% } %>
 </div>
 
 <div class="divForm">
+    <div class="userLogged1">
+        <% if (locals.isLogged) { %>
+            <div class="userLoggedName1"><%= userLogged.first_name + ' ' + userLogged.last_name%></div>
+            <div class="userLoggedLogout1"><a href="/users/logout" class= "aUserLogged1">Cerrar sesión</a></div> 
+        <% } %>
+    </div>
     <h1 class="title1">Generación de tokens</h1>
 <form action="/tokens/generate" method="POST" name="formTokenGeneration" class="form1">
     <div>
