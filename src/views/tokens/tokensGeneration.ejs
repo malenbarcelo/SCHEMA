@@ -2,12 +2,7 @@
 <%- include('../partials/header') %>
 <%- include('../partials/userLogged') %>
 
-<div class="userLogged">
-    <% if (locals.isLogged) { %>
-        <div class="userLoggedName"><%= userLogged.first_name + ' ' + userLogged.last_name%></div>
-        <div class="userLoggedLogout"><a href="/users/logout" class= "aUserLogged">Cerrar sesión</a></div> 
-    <% } %>
-</div>
+
 
 <% if (locals.successMessage1) { %>
     <script>
@@ -19,6 +14,13 @@
         alertify.success('Companía creada con éxito');
     </script>
 <% } %>
+
+<div class="userLogged">
+    <% if (locals.isLogged) { %>
+        <div class="userLoggedName"><%= userLogged.first_name + ' ' + userLogged.last_name%></div>
+        <div class="userLoggedLogout"><a href="/users/logout" class= "aUserLogged">Cerrar sesión</a></div> 
+    <% } %>
+</div>
 
 <div class="divForm">
     <h1 class="title1">Generación de tokens</h1>
