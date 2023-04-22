@@ -13,20 +13,15 @@
     </script>
 <% } %>
 
-<div class="userLogged1">
-    <% if (locals.isLogged) { %>
-        <div class="userLoggedName1"><%= userLogged.first_name + ' ' + userLogged.last_name%></div>
-        <div class="userLoggedLogout1"><a href="/users/logout" class= "aUserLogged1">Cerrar sesión</a></div> 
-    <% } %>
+<div class="div25">
+    
+    <div class="div26">Male</div>
+    <div class="div27"><a href="/users/logout" class= "aDiv27">Cerrar sesión</a></div> 
+    
 </div>
 
 <div class="divForm">
-    <div class="userLogged1">
-        <% if (locals.isLogged) { %>
-            <div class="userLoggedName1"><%= userLogged.first_name + ' ' + userLogged.last_name%></div>
-            <div class="userLoggedLogout1"><a href="/users/logout" class= "aUserLogged1">Cerrar sesión</a></div> 
-        <% } %>
-    </div>
+    
     <h1 class="title1">Generación de tokens</h1>
 <form action="/tokens/generate" method="POST" name="formTokenGeneration" class="form1">
     <div>
