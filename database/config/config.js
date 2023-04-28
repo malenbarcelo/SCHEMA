@@ -1,12 +1,12 @@
 //DEV
-/*const username = "root"
+const username = "root"
 const password = "30941767"
-const database = "schema_db"*/
+const database = "schema_db"
 
 //PRD
-const username = "malenbar_malenbarcelo"
+/*const username = "malenbar_malenbarcelo"
 const password = "30941767Male-"
-const database = "malenbar_schema_sim"
+const database = "malenbar_schema_sim"*/
 
 module.exports = 
 {

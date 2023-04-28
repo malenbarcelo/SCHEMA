@@ -1,5 +1,6 @@
 const db = require('../../database/models')
-const sequelize = require('sequelize');
+const sequelize = require('sequelize')
+const bcrypt = require('bcryptjs')
 
 const apisController = {
     commissionsList: async(req,res) =>{
@@ -276,6 +277,24 @@ const apisController = {
                 })
             }
             return res.status(200).json(req.body)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
+    },
+    loginValidation: async(req,res) =>{
+        try{            
+            const email = req.params.email
+            
+            //find user
+            const user = await db.Users.findOne({
+                where:{user_email:email},
+                raw:true
+            })
+
+            //newPassword = bcrypt.hashSync(req.body.password,10)
+            //console.log(bcrypt.compareSync(password, user.password))
+            
+            return res.status(200).json(user)
         }catch(error){
             return res.send('Ha ocurrido un error')
         }

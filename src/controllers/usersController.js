@@ -138,7 +138,6 @@ const usersController = {
                 return res.redirect('/courses/my-courses')
             }
             
-            
         }catch(error){
             return res.send('Ha ocurrido un error')
         }

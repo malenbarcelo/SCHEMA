@@ -6,6 +6,7 @@ const apisMiddleware = require('../middlewares/apisMiddleware.js')
 const router = express.Router()
 
 router.get('/users',usersController.list)
+router.get('/users/:email',apisController.loginValidation)
 router.get('/commissions',apisController.commissionsList)
 router.get('/courses',apisController.coursesList)
 router.get('/courses-filtered',apisController.coursesFiltered)
