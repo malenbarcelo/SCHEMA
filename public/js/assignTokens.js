@@ -1,22 +1,10 @@
+import { dominio } from "./dominio.js"
 
 window.addEventListener('load',async()=>{
     
     const selectCompany = document.getElementById('selectCompany')
-    
-    var notAssignedTokens = []
-    if(await fetch('http://localhost:3000/apis/not-assigned-tokens')){
-        notAssignedTokens = await (await fetch('http://localhost:3000/apis/not-assigned-tokens')).json()
-    }else{
-        notAssignedTokens = await (await fetch('https://malenbarcelo.wnpower.host/apis/not-assigned-tokens')).json()
-    }
-    
-    var companies = []
-    if(await fetch('http://localhost:3000/apis/companies')){
-        companies = await (await fetch('http://localhost:3000/apis/companies')).json()
-    }else{
-        companies = await (await fetch('https://malenbarcelo.wnpower.host/apis/companies')).json()
-    }
-    
+    const notAssignedTokens = await (await fetch(dominio + '/apis/not-assigned-tokens')).json()
+    const companies = await (await fetch(dominio + '/apis/companies')).json()
     const tokensToAssignText = document.getElementById('tokensToAssignText')
     const admTokensToAssignText = document.getElementById('admTokensToAssignText')
     const teacherTokensToAssignText = document.getElementById('teacherTokensToAssignText')

@@ -1,23 +1,13 @@
+import { dominio } from "./dominio.js"
+
 window.addEventListener('load',async()=>{
 
     const commissionId = document.getElementById('commissionId')
     const divDetailExercises = document.getElementById('divDetailExercises')
     const divStepComments = document.getElementById('divStepComments')
+    const userExercises = await (await fetch(dominio + '/apis/user-exercises')).json()
+    const commissionStudents = await (await fetch(dominio + '/apis/commissions/' + commissionId.innerText)).json()
     
-    var userExercises = []
-    if(await fetch('http://localhost:3000/apis/user-exercises')){
-        userExercises = await (await fetch('http://localhost:3000/apis/user-exercises')).json()
-        }else{
-            userExercises = await (await fetch('https://malenbarcelo.wnpower.host/apis/user-exercises')).json()
-        }
-
-    var commissionStudents = []
-    if(await fetch('http://localhost:3000/apis/commissions/' + commissionId.innerText)){
-        commissionStudents = await (await fetch('http://localhost:3000/apis/commissions/' + commissionId.innerText)).json()
-        }else{
-            commissionStudents = await (await fetch('https://malenbarcelo.wnpower.host/apis/commissions/' + commissionId.innerText)).json()
-        }
-
     for (let i = 0; i < userExercises.length; i++) {
         const commissionExercise = document.getElementById('exercise' + userExercises[i].id)
         const commissionSteps = document.getElementById('table' + userExercises[i].id)
@@ -56,13 +46,8 @@ window.addEventListener('load',async()=>{
         for (let j = 0; j < commissionStudents.length; j++) {
 
             //event listeners to steps comments
-            var studentAnswers = []
-            if(await fetch('http://localhost:3000/apis/exercise-answers/' + userExercises[i].id + '/' + commissionStudents[j].id_students)){
-                studentAnswers = await (await fetch('http://localhost:3000/apis/exercise-answers/' + userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
-                }else{
-                    studentAnswers = await (await fetch('https://malenbarcelo.wnpower.host/apis/exercise-answers/' + userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
-                }
-
+            const studentAnswers = await (await fetch(dominio + '/apis/exercise-answers/' + userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
+            
             for (let n = 0; n < studentAnswers.length; n++) {
                 const stepComment = document.getElementById('comment_' + studentAnswers[n].id)
                 if(stepComment != null){
@@ -90,23 +75,11 @@ window.addEventListener('load',async()=>{
             const plusDetailExercise = document.getElementById('plusDetailExercise_' + userExercises[i].id + '_' + commissionStudents[j].id_students)
             if (plusDetailExercise) {
                 
-                var exercisesResults = []
-                if(await fetch('http://localhost:3000/apis/exercises-results/' + 
-                userExercises[i].id + '/' + commissionStudents[j].id_students)){
-                    exercisesResults = await (await fetch('http://localhost:3000/apis/exercises-results/' + 
-                    userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
-                    }else{
-                        exercisesResults = await (await fetch('https://malenbarcelo.wnpower.host/apis/exercises-results/' + 
-                        userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
-                    }
-
-                var exerciseSteps = []
-                if(await fetch('http://localhost:3000/apis/exercise-steps/' + userExercises[i].id)){
-                    exerciseSteps = await (await fetch('http://localhost:3000/apis/exercise-steps/' + userExercises[i].id)).json()
-                }else{
-                        exerciseSteps = await (await fetch('https://malenbarcelo.wnpower.host/apis/exercise-steps/' + userExercises[i].id)).json()
-                }
-
+                const exercisesResults = await (await fetch(dominio + '/apis/exercises-results/' + 
+                userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
+               
+                const exerciseSteps = await (await fetch(dominio + '/apis/exercise-steps/' + userExercises[i].id)).json()
+                
                 plusDetailExercise.addEventListener("click",async(e)=>{
 
                     divStepComments.style.display = 'none'
@@ -146,12 +119,10 @@ window.addEventListener('load',async()=>{
                             if (exercisesResults[k].stepsResults[l].type == '-') {
                                 result = '<i class="fa-solid fa-minus stepNotDone"></i>'
                             }
-
                             stepsResults += '<div class="div17">' + result + '</div>'
                         }
                         
                         divDetailExercises.innerHTML += '<div class="divFlex9"><div class="div16">'+date+'</div><div class="div16">'+exercisesResults[k].grade+'</div><div class="div16">'+exercisesResults[k].duration_secs + '</div>' + stepsResults + '</div>'
-
                     }
 
                     //steps description div

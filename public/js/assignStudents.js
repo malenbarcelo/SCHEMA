@@ -1,3 +1,5 @@
+import { dominio } from "./dominio.js"
+
 window.addEventListener('load',()=>{
 
     const selectCourse = document.getElementById('selectCourse')
@@ -9,25 +11,14 @@ window.addEventListener('load',()=>{
         const selectedOption = (e.target.options[e.target.selectedIndex]).innerText
 
         //get all the courses
-        var courses = []
-        
-        if(await fetch('http://localhost:3000/apis/courses')){
-            courses = await (await fetch('http://localhost:3000/apis/courses')).json()
-        }else{
-            courses = await (await fetch('https://malenbarcelo.wnpower.host/apis/courses')).json()
-        }
+        const courses = await (await fetch(dominio + '/apis/courses')).json()
         
         //get course id
         const courseId = courses.filter(course =>course.course_name == selectedOption)
 
         //get commissions list
-        var allCommissions = []
-        if(await fetch('http://localhost:3000/apis/commissions')){
-            allCommissions = await (await fetch('http://localhost:3000/apis/commissions')).json()
-        }else{
-            allCommissions = await (await fetch('https://malenbarcelo.wnpower.host/apis/commissions')).json()
-        }
-
+        const allCommissions = await (await fetch(dominio + '/apis/commissions')).json()
+        
         var commissionsFiltered = []
 
         if(selectCourse.value != 'default'){

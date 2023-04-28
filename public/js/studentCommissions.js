@@ -1,22 +1,14 @@
+import { dominio } from "./dominio.js"
+
 window.addEventListener('load',async()=>{
 
-    var userExercises = []
-    if(await fetch('http://localhost:3000/apis/user-exercises')){
-        userExercises = await (await fetch('http://localhost:3000/apis/user-exercises')).json()
-    }else{
-            userExercises = await (await fetch('https://malenbarcelo.wnpower.host/apis/user-exercises')).json()
-    }
+    const userExercises = await (await fetch(dominio + '/apis/user-exercises')).json()
     
     const divStepComments = document.getElementById('divStepComments')
 
     for (let i = 0; i < userExercises.length; i++) {
 
-        var wrongAnswers = []
-        if(await fetch('http://localhost:3000/apis/steps-wrong-anwers/' + userExercises[i].id)){
-            wrongAnswers = await (await fetch('http://localhost:3000/apis/steps-wrong-anwers/' + userExercises[i].id)).json()
-        }else{
-                wrongAnswers = await (await fetch('https://malenbarcelo.wnpower.host/apis/steps-wrong-anwers/' + userExercises[i].id)).json()
-        }
+        const wrongAnswers = await (await fetch(dominio + '/apis/steps-wrong-anwers/' + userExercises[i].id)).json()
         
         for (let j = 0; j < wrongAnswers.length; j++) {
 
