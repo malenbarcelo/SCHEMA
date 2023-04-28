@@ -304,7 +304,7 @@ const coursesController = {
                 await db.Course_commissions_students.create(studentsCommissions[i])
             }
 
-            const successMessage = 'Alumnos asignados con éxito'
+            const successMessage = true
 
             return res.render('courses/assignStudents',{
                 title:'Asignar alumnos',

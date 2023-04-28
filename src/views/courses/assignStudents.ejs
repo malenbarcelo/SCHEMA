@@ -3,10 +3,9 @@
 <%- include('../partials/userLogged') %>
 
 <% if (locals.successMessage) { %>
-    <div class="successMessage">
-        <i class="fa-solid fa-check"></i>
-        <p><%= successMessage%></p>
-    </div>
+    <script>
+        alertify.success('Alumnos asignados con éxito');
+    </script>
 <% } %>
 
 <div class="divForm">
