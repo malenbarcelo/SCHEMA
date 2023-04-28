@@ -10,14 +10,14 @@ router.get('/commissions',apisController.commissionsList)
 router.get('/courses',apisController.coursesList)
 router.get('/courses-filtered',apisController.coursesFiltered)
 router.post('/exercises',apisController.storeResults)
-router.get('/teacher-exercises',apisController.teacherExercises)
+router.get('/user-exercises',apisController.userLoggedExercises)
 router.get('/not-assigned-tokens',apisController.notAssignedTokens)
 router.get('/companies',apisController.companies)
 router.get('/commissions/:idCommission',apisController.studentsExercises)
+router.get('/exercise-steps/:idExercise',apisController.exerciseSteps)
 router.get('/exercises-results/:idExercise/:idStudent',apisMiddleware,apisController.exercisesResults)
-router.get('/exercises-answers/:idExerciseResult',apisController.exercisesAnswers)
-router.get('/exercises-steps/:idExercise',apisController.exercisesSteps)
-
+router.get('/exercise-answers/:idExercise/:idStudent',apisMiddleware,apisController.exerciseAnswers)
+router.get('/steps-wrong-anwers/:idExercise',apisController.userLoggedWrongAnswers)
 
 
 module.exports = router

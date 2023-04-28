@@ -31,5 +31,6 @@ router.get('/students-assignation',admsMiddleware,coursesController.assignStuden
 router.post('/students-assignation',admsMiddleware,upload.single('fileAssignStudents'),coursesFormsValidations.assignStudentsFormValidations,coursesController.processAssignStudents)
 router.get('/my-courses',coursesController.myCourses)
 router.get('/commissions/:idCommission',coursesController.filterCommission)
+router.get('/commissions/:idCommission/:idStudent',coursesController.filterCommissionAndStudent)
 
 module.exports = router

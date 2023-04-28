@@ -10,7 +10,12 @@
         <div class="div1" id="<%= 'commissionsCourse' + course.id_courses %>">
                 <% commissions.forEach(commission => { %>
                     <% if (commission.course_commission_course.id == course.id_courses) { %>
-                        <div class="div2"><a href="/courses/commissions/<%= commission.id %>">Comisión: <%= commission.commission %> [Inicio <%= commission.start_date %> -  Fin <%= commission.end_date %>]</a>
+
+                        <div class="div2">
+                            <a href=<%= userLogged.id_user_categories != 4 ? '/courses/commissions/' + commission.id : '/courses/commissions/' + commission.id + '/' + userLogged.id %>>
+                            Comisión: <%= commission.commission %> [Inicio <%= commission.start_date %> -  Fin <%= commission.end_date %>]
+                            </a>
+
                             <% if (date <= new Date(commission.end_date + "T00:00:00") || ((date.getDate() == (new Date(commission.end_date + "T00:00:00")).getDate()) && (date.getMonth() == (new Date(commission.end_date + "T00:00:00")).getMonth()) && (date.getFullYear() == (new Date(commission.end_date + "T00:00:00")).getFullYear()))) { %>
                                 <div class="div3">En curso</div>
                             <% } %>
@@ -18,13 +23,8 @@
                     <% } %>
                 <% }) %>
         </div>
-
     <% }) %>
 
 </div>
-
-    
-
-
 
 <script src="/js/myCourses.js"></script>

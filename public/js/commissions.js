@@ -1,25 +1,41 @@
 window.addEventListener('load',async()=>{
 
-    const teacherExercises = await (await fetch('http://localhost:3000/apis/teacher-exercises')).json()
     const commissionId = document.getElementById('commissionId')
-    const commissionStudents = await (await fetch('http://localhost:3000/apis/commissions/' + commissionId.innerText)).json()
-    const exerciseStudentTable = document.getElementById('exerciseStudentTable')
+    const divDetailExercises = document.getElementById('divDetailExercises')
+    const divStepComments = document.getElementById('divStepComments')
+    
+    var userExercises = []
+    if(await fetch('http://localhost:3000/apis/user-exercises')){
+        userExercises = await (await fetch('http://localhost:3000/apis/user-exercises')).json()
+        }else{
+            userExercises = await (await fetch('https://malenbarcelo.wnpower.host/apis/user-exercises')).json()
+        }
 
-    for (let i = 0; i < teacherExercises.length; i++) {
-        const commissionExercise = document.getElementById('exercise' + teacherExercises[i].id)
-        const commissionSteps = document.getElementById('table' + teacherExercises[i].id)
-        const angleRight = document.getElementById('angleRight' + teacherExercises[i].id)
-        const angleLeft = document.getElementById('angleLeft' + teacherExercises[i].id)
-        const divRefs = document.getElementById('divRefs' + teacherExercises[i].id)
+    var commissionStudents = []
+    if(await fetch('http://localhost:3000/apis/commissions/' + commissionId.innerText)){
+        commissionStudents = await (await fetch('http://localhost:3000/apis/commissions/' + commissionId.innerText)).json()
+        }else{
+            commissionStudents = await (await fetch('https://malenbarcelo.wnpower.host/apis/commissions/' + commissionId.innerText)).json()
+        }
+
+    for (let i = 0; i < userExercises.length; i++) {
+        const commissionExercise = document.getElementById('exercise' + userExercises[i].id)
+        const commissionSteps = document.getElementById('table' + userExercises[i].id)
+        const angleRight = document.getElementById('angleRight' + userExercises[i].id)
+        const angleLeft = document.getElementById('angleLeft' + userExercises[i].id)
+        const divRefs = document.getElementById('divRefs' + userExercises[i].id)
         
         commissionExercise.addEventListener("click",async(e)=>{
 
-            for (let j = 0; j < teacherExercises.length; j++) {
-                const exercise = document.getElementById('exercise' + teacherExercises[j].id)
-                const steps = document.getElementById('table' + teacherExercises[j].id)
-                const angleRight2 = document.getElementById('angleRight' + teacherExercises[j].id)
-                const angleLeft2 = document.getElementById('angleLeft' + teacherExercises[j].id)
-                const divRefs2 = document.getElementById('divRefs' + teacherExercises[j].id)
+            divDetailExercises.style.display = 'none'
+            divStepComments.style.display = 'none'
+            
+            for (let j = 0; j < userExercises.length; j++) {
+                const exercise = document.getElementById('exercise' + userExercises[j].id)
+                const steps = document.getElementById('table' + userExercises[j].id)
+                const angleRight2 = document.getElementById('angleRight' + userExercises[j].id)
+                const angleLeft2 = document.getElementById('angleLeft' + userExercises[j].id)
+                const divRefs2 = document.getElementById('divRefs' + userExercises[j].id)
                 if(exercise != null && exercise != commissionExercise){
                     exercise.classList.remove('exerciseSelected')
                     steps.classList.add('table2')
@@ -36,20 +52,78 @@ window.addEventListener('load',async()=>{
         })
     }
 
-    for (let i = 0; i < teacherExercises.length; i++) {
-
+    for (let i = 0; i < userExercises.length; i++) {
         for (let j = 0; j < commissionStudents.length; j++) {
+
+            //event listeners to steps comments
+            var studentAnswers = []
+            if(await fetch('http://localhost:3000/apis/exercise-answers/' + userExercises[i].id + '/' + commissionStudents[j].id_students)){
+                studentAnswers = await (await fetch('http://localhost:3000/apis/exercise-answers/' + userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
+                }else{
+                    studentAnswers = await (await fetch('https://malenbarcelo.wnpower.host/apis/exercise-answers/' + userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
+                }
+
+            for (let n = 0; n < studentAnswers.length; n++) {
+                const stepComment = document.getElementById('comment_' + studentAnswers[n].id)
+                if(stepComment != null){
+                    stepComment.addEventListener("click",async(e)=>{
+
+                        divDetailExercises.style.display = 'none'
             
-            const plusDetailExercise = document.getElementById('plusDetailExercise_' + teacherExercises[i].id + '_' + commissionStudents[j].id_students)
+                        divStepComments.innerHTML ='<div class="div13" id="closeObservation">x</div>'
+                        divStepComments.innerHTML += '<div class="div14"> <b>Observaciones: </b></div>'
+                        divStepComments.innerHTML += '<div class="div15">'+ studentAnswers[n].observations +'</div>'
+
+                        divStepComments.style.display = 'block'
+                        divStepComments.style.left = stepComment.getBoundingClientRect().x + window.pageXOffset + 'px'
+                        divStepComments.style.top = stepComment.getBoundingClientRect().y + window.pageYOffset + 'px'
+
+                        const closeObservation = document.getElementById('closeObservation')
+                        
+                        closeObservation.addEventListener("click",async(e)=>{
+                            divStepComments.style.display = 'none'
+                        })
+                    })
+                }
+            }
+            
+            const plusDetailExercise = document.getElementById('plusDetailExercise_' + userExercises[i].id + '_' + commissionStudents[j].id_students)
             if (plusDetailExercise) {
-                const exercisesResults = await (await fetch('http://localhost:3000/apis/exercises-results/' + teacherExercises[i].id + '/' + commissionStudents[j].id_students)).json()
+                
+                var exercisesResults = []
+                if(await fetch('http://localhost:3000/apis/exercises-results/' + 
+                userExercises[i].id + '/' + commissionStudents[j].id_students)){
+                    exercisesResults = await (await fetch('http://localhost:3000/apis/exercises-results/' + 
+                    userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
+                    }else{
+                        exercisesResults = await (await fetch('https://malenbarcelo.wnpower.host/apis/exercises-results/' + 
+                        userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
+                    }
+
+                var exerciseSteps = []
+                if(await fetch('http://localhost:3000/apis/exercise-steps/' + userExercises[i].id)){
+                    exerciseSteps = await (await fetch('http://localhost:3000/apis/exercise-steps/' + userExercises[i].id)).json()
+                }else{
+                        exerciseSteps = await (await fetch('https://malenbarcelo.wnpower.host/apis/exercise-steps/' + userExercises[i].id)).json()
+                }
+
                 plusDetailExercise.addEventListener("click",async(e)=>{
-                    const divDetailExercises = document.getElementById('divDetailExercises')
+
+                    divStepComments.style.display = 'none'
+                    
                     divDetailExercises.innerHTML ='<div class="div13" id="closeStudentData">x</div>'
                     divDetailExercises.innerHTML += '<div class="div14"> <b>Alumno: </b> '+
                     commissionStudents[j].commission_user.last_name +', '+ commissionStudents[j].commission_user.first_name + '</div>'
-                    divDetailExercises.innerHTML += '<div class="div15"><b>Ejercicio: </b>'+teacherExercises[i].exercise_name+'</div>'
-                    divDetailExercises.innerHTML += '<div class="divFlex9"><div class="div16"><b>Fecha</b></div><div class="div16"><b>Nota</b></div><div class="div16"><b>Tiempo</b></div></div>'
+                    divDetailExercises.innerHTML += '<div class="div15"><b>Ejercicio: </b>'+userExercises[i].exercise_name+'</div>'
+
+                    var steps =''
+                    for (let k = 0; k < exerciseSteps.length; k++) {
+                        steps += '<div class="div17"><b>' + exerciseSteps[k].code + '</b></div>'
+                    }
+
+                    divDetailExercises.innerHTML += '<div class="divFlex9"><div class="div16"><b>Fecha</b></div><div class="div16"><b>Nota</b></div><div class="div16"><b>Tiempo</b></div>' + steps + '</div>'
+                    
+                    divDetailExercises.innerHTML += '</div>'                    
 
                     for (let k = 0; k < exercisesResults.length; k++) {
                         const fullDate = new Date(parseInt(exercisesResults[k].date))
@@ -57,25 +131,50 @@ window.addEventListener('load',async()=>{
                         const month = fullDate.getMonth()
                         const year = fullDate.getFullYear()
                         const date = day +'/' + month + '/' + year
+
+                        var stepsResults = []
+
+                        for (let l = 0; l < exercisesResults[k].stepsResults.length; l++) {
+
+                            var result = ''
+                            if (exercisesResults[k].stepsResults[l].type == 'Paso realizado correctamente') {
+                                result = '<i class="fa-solid fa-check stepPassed"></i>'
+                            }
+                            if (exercisesResults[k].stepsResults[l].type == 'Error') {
+                                result = '<i class="fa-solid fa-xmark stepNotPassed"></i>'
+                            }
+                            if (exercisesResults[k].stepsResults[l].type == '-') {
+                                result = '<i class="fa-solid fa-minus stepNotDone"></i>'
+                            }
+
+                            stepsResults += '<div class="div17">' + result + '</div>'
+                        }
                         
-                        divDetailExercises.innerHTML += '<div class="divFlex9"><div class="div16">'+date+'</div><div class="div16">'+exercisesResults[k].grade+'</div><div class="div16">'+exercisesResults[k].duration_secs+'</div>'
+                        divDetailExercises.innerHTML += '<div class="divFlex9"><div class="div16">'+date+'</div><div class="div16">'+exercisesResults[k].grade+'</div><div class="div16">'+exercisesResults[k].duration_secs + '</div>' + stepsResults + '</div>'
+
                     }
+
+                    //steps description div
+                    var steps = ''
+                    exerciseSteps.forEach(exerciseStep => {
+                        steps +='<div class="div19">' + exerciseStep.code + ': ' + exerciseStep.description + '</div>'
+                    });
+
+                    divDetailExercises.innerHTML +='<div class="div18"><b>Pasos del ejercicio</b>' + steps + '</div>'
+                    
                     divDetailExercises.style.display = 'block'
-                    divDetailExercises.style.left = plusDetailExercise.getBoundingClientRect().x + 'px'
-                    divDetailExercises.style.top = plusDetailExercise.getBoundingClientRect().y + 'px'
+                    divDetailExercises.style.left = plusDetailExercise.getBoundingClientRect().x + window.pageXOffset + 'px'
+                    divDetailExercises.style.top = plusDetailExercise.getBoundingClientRect().y + window.pageYOffset + 'px'
 
                     const closeStudentData = document.getElementById('closeStudentData')
                     
                     closeStudentData.addEventListener("click",async(e)=>{
                             divDetailExercises.style.display = 'none'
                     })
-
                 })
             }
         }
     }
-
-    
 
 
 })

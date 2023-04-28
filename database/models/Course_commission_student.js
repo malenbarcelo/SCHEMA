@@ -27,7 +27,12 @@ module.exports = (sequelize, DataTypes) => {
       Course_commission_student.belongsTo(models.Users,{
           as:'commission_user',
           foreignKey: 'id_students'
-      })
+      }),
+      Course_commission_student.belongsTo(models.Course_commissions,{
+         as:'commission_data',
+         foreignKey: 'id_course_commissions'
+     })
+      
    }
    
    return Course_commission_student

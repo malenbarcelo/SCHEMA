@@ -1,7 +1,12 @@
 window.addEventListener('load',async()=>{
 
     //get user logged courses
-    const idCourses = await (await fetch('http://localhost:3000/apis/courses-filtered')).json()
+    var idCourses = []
+    if(await fetch('http://localhost:3000/apis/courses-filtered')){
+        idCourses = await (await fetch('http://localhost:3000/apis/courses-filtered')).json()
+    }else{
+            idCourses = await (await fetch('https://malenbarcelo.wnpower.host/apis/courses-filtered')).json()
+    }
 
     idCourses.forEach(idCourse => {
         

@@ -106,7 +106,7 @@ a{
 
 .div10{
     position:absolute;
-    background-color:  rgb(230, 228, 228);
+    background-color:  rgb(239, 237, 237);
     z-index: 1;
     display:none;
     border-radius:5px;
@@ -130,23 +130,76 @@ a{
 
 .div14{
     margin-top:17px;
+    margin-bottom: 5px;
     font-size:12px;
+   
 }
 
 .div15{
     margin-top:0px;
     font-size:12px;
-    margin-bottom:10px
+    margin-bottom:5px
 }
 
 .div16{
-    font-size:11px;
+    font-size:10px;
     margin-bottom:3px;
-    width: 60px;
+    width: 50px;
     text-align: center;
     border-bottom:black solid 1px
 }
 
+.div17{
+    font-size:10px;
+    margin-bottom:3px;
+    width: 25px;
+    text-align: center;
+    border-bottom:black solid 1px
+}
+
+.div18{
+    font-size:10px;
+    margin-top:10px;
+    border:rgb(131, 129, 129) solid 1px;
+    width: fit-content;
+    border-radius: 5px;
+    padding:5px
+}
+
+.div19{
+    font-size:10px;
+}
+
+.div20{
+    position:absolute;
+    background-color:  rgb(239, 237, 237);
+    z-index: 1;
+    display:none;
+    border-radius:5px;
+    padding:10px;
+    padding-top: 0px;
+    width: 250px;
+}
+
+.div21{
+    width:fit-content;
+    margin: auto;
+    border: rgb(207, 206, 206) solid 1px;
+    text-align: left;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px
+}
+
+.div22{
+    width:80%;
+    margin-left: 200px;
+}
+
+.div23{
+    background-color: #233c73 ;
+    color:white;
+}
 
 .divButtons1{
     margin-top:15px
@@ -253,7 +306,9 @@ a{
 .divForm{
     width: 60%;
     margin-left:25%;
-    }
+}
+
+
 
 .divLogin{
     width: 60%;
@@ -319,7 +374,6 @@ a{
     font-size: 12px;
 }
 
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -374,6 +428,11 @@ input::-webkit-inner-spin-button {
     font-size: 12px;
 }
 
+.p6{
+    font-size: 12px;
+    margin: 0px;
+}
+
 .plus1{
     font-size: 12px;
     cursor: pointer;
@@ -389,8 +448,6 @@ input::-webkit-inner-spin-button {
     cursor: pointer;
 }
 
-
-
 .select1{
     border:none;
     text-align: center;
@@ -398,7 +455,8 @@ input::-webkit-inner-spin-button {
 }
 
 .stepNotPassed{
-    color:red
+    color:red;
+    cursor: pointer;
 }
 
 .stepPassed{
@@ -412,6 +470,7 @@ input::-webkit-inner-spin-button {
 .tableTitle1{
     font-size: 12px;
     background-color: rgb(206, 206, 214);
+    padding: 2px 4px;
 }
 
 .tableTitle2{
@@ -430,6 +489,8 @@ input::-webkit-inner-spin-button {
 
 .td2{
     text-align: center;
+    width: max-content;
+    padding:2px 5px
 }
 
 .title1{
@@ -459,6 +520,11 @@ input::-webkit-inner-spin-button {
 .title5{
     font-size: 12px;
 }
+
+.title6{
+    padding:2px
+}
+
 .xlsExample{
     width: 100px;
 }
@@ -468,42 +534,4 @@ input::-webkit-inner-spin-button {
     margin-bottom: 15px;
 }
 
-
-.userLogged1{
-    text-align: right;
-    padding-right: 15px;
-}
-
-.userLoggedName1{
-    margin-top:3px;
-    font-weight: bold;
-    font-size: 15px;
-}
-.userLoggedLogout1{
-    margin-top:3px;
-    font-size: 12px;
-}
-
-.aUserLogged1{
-    color: rgb(4, 4, 222)
-}
-
-.div25{
-    text-align: right;
-    padding-right: 15px;
-}
-.div26{
-    margin-top:3px;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-.div27{
-    margin-top:3px;
-    font-size: 12px;
-}
-
-.aDiv27{
-    color: blue;
-}
 

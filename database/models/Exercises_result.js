@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
          as:'exercise_result_user',
          foreignKey: 'id_users'
      })
+     
    }
    return Exercises_result
 }

@@ -31,51 +31,81 @@ const apisController = {
                     raw:true})
             }
 
+            if(req.session.userLogged.id_user_categories == 4){
+                commissions = await db.Course_commissions_students.findAll({
+                    attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_course_commissions')), 'id_course_commissions']],
+                    where:{id_students:req.session.userLogged.id},
+                    include:[{all:true}],
+                    nest:true,
+                    raw:true})
+
+                var coursesFiltered = []
+
+                commissions.forEach(commission => {
+                    coursesFiltered.push({'id_courses':commission.commission_data.id_courses})
+                });
+
+                //remove duplicates
+                coursesFiltered = coursesFiltered.filter(function({id_courses}) {
+                    return !this.has(id_courses) && this.add(id_courses)
+                    }, new Set)
+            }
+
             return res.status(200).json(coursesFiltered)
 
         }catch(error){
             return res.send('Ha ocurrido un error')
         }
     },
-    teacherExercises:async(req,res) =>{
+    userLoggedExercises:async(req,res) =>{
         try{
-            const teacherCourses = await db.Course_commissions.findAll({
-                attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_courses')), 'id_courses']],
-                where:{id_teachers:req.session.userLogged.id},
-                nest:true,
-                raw:true})
 
-            //get an array of courses ids
-            const idCourses = []
+            var courses = []
+            var exercises = []
 
-            teacherCourses.forEach(teacherCourse => {
-                idCourses.push(teacherCourse.id_courses)
-            });
+            //if user Logged is an administrator
+            if(req.session.userLogged.id_user_categories == 2){
+                courses = await db.Courses.findAll({
+                    where:{id_companies: req.session.userLogged.id_companies},
+                    raw:true
+                })
+            }
+
+            //if user Logged is a teacher
+            if(req.session.userLogged.id_user_categories == 3){
+                courses = await db.Course_commissions.findAll({
+                    attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_courses')), 'id']],
+                    where:{id_teachers: req.session.userLogged.id},
+                    raw:true
+                })
+            }
+
+            const idsCourses = courses.map(course => course.id)
 
             //get simulators
             const simulators = await db.Courses_simulators.findAll({
-                where:{id_courses:idCourses},
-                nest:true,
+                attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_simulators')), 'id_simulators']],
+                where: {id_courses:idsCourses},
                 raw:true
             })
 
-            //get an array of simulators ids
-            const idSimulators = []
-
-            simulators.forEach(simulator => {
-                idSimulators.push(simulator.id_simulators)
-            });
-
-            console.log(idSimulators)
+            const idsSimulators = simulators.map(simulator => simulator.id_simulators)
 
             //get exercises
-            const teacherExercises = await db.Exercises.findAll({
-                where:{id_simulators:idSimulators},
-                nest:true,
-                raw:true
-            })
+            if(req.session.userLogged.id_user_categories == 4){
+                exercises = await db.Exercises_results.findAll({
+                    attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_exercises')), 'id']],
+                    where:{id_users: req.session.userLogged.id}
+                })
+            }else{
+                exercises = await db.Exercises.findAll({
+                    attributes:['id'],
+                    where:{id_simulators: idsSimulators},
+                    raw:true
+                })
+            }
 
-            return res.status(200).json(teacherExercises)
+            return res.status(200).json(exercises)
 
         }catch(error){
             return res.send('Ha ocurrido un error')
@@ -120,36 +150,88 @@ const apisController = {
             include:[{all:true}]
         })
 
+        exercisesResults.map(exerciseResult => exerciseResult.stepsResults = [])
+
+        //All exercises steps
+        const exercisesSteps = await db.Exercises_answers.findAll({
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('description')), 'description']],
+            where:{id_exercises: idExercise},
+            order:[['description','ASC']],
+            raw:true
+        })
+
+        //Complete student exercises steps
+        for (let i = 0; i < exercisesResults.length; i++) {
+            for (let j = 0; j < exercisesSteps.length; j++) {
+                const stepResult = await db.Exercises_answers.findOne({
+                    where:{id_exercises_results:exercisesResults[i].id,description:exercisesSteps[j].description},
+                    raw:true
+                })
+
+                const arrayDescription = exercisesSteps[j].description.split("_")
+                const code = arrayDescription[0]
+                const description = arrayDescription[1]
+
+                if(stepResult){
+                    exercisesResults[i].stepsResults.push({'code':code,'description':description,'log_time':stepResult.log_time,'type':stepResult.type,'observations':stepResult.observations})
+
+                }else{
+                    exercisesResults[i].stepsResults.push({'code':code,'description':description,'log_time':'-','type':'-','observations':'-'})
+                }
+                
+            }
+            
+        }
+
         return res.status(200).json(exercisesResults)
     },
     
-    exercisesAnswers: async(req,res) =>{
+    exerciseAnswers: async(req,res) =>{
 
-        const idExerciseResult = req.params.idExerciseResult
+        const idExercise = req.params.idExercise
+        const idStudent = req.params.idStudent
         
         const exercisesAnswers = await db.Exercises_answers.findAll({
-            where:{id_exercises_results: idExerciseResult},
-            order:[['description','ASC']],
+            where:{id_exercises: idExercise, id_users: idStudent},
             raw:true,
-            nest:true,
-            include:[{all:true}]
         })
 
         return res.status(200).json(exercisesAnswers)
     },
-    exercisesSteps: async(req,res) =>{
+    userLoggedWrongAnswers: async(req,res) =>{
+
+        const idStudent =  req.session.userLogged.id
+        const idExercise =  req.params.idExercise
+        
+        const wrongAnswers = await db.Exercises_answers.findAll({
+            where:{id_users: idStudent,id_exercises:idExercise, type:'Error'},
+            raw:true,
+        })
+
+        return res.status(200).json(wrongAnswers)
+    },
+    exerciseSteps: async(req,res) =>{
 
         const idExercise = req.params.idExercise
         
-        const exerciseSteps = await db.Exercises_answers.findAll({
-            where:{id_exercises_results: idExerciseResult},
+        //All exercises steps
+        let exerciseSteps = await db.Exercises_answers.findAll({
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('description')), 'description']],
+            where:{id_exercises: idExercise},
             order:[['description','ASC']],
-            raw:true,
-            nest:true,
-            include:[{all:true}]
+            raw:true
         })
 
-        return res.status(200).json(exercisesanswers)
+        exerciseSteps.forEach(exerciseStep => {
+            const arrayDescription = exerciseStep.description.split("_")
+            
+            exerciseStep.code = arrayDescription[0]
+            exerciseStep.description = arrayDescription[1]
+            
+        });
+
+
+        return res.status(200).json(exerciseSteps)
     },
     storeResults: async(req,res) =>{
         try{
@@ -197,7 +279,7 @@ const apisController = {
         }catch(error){
             return res.send('Ha ocurrido un error')
         }
-}
+    },
     
 }
 module.exports = apisController

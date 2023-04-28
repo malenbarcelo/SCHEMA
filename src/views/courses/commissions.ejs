@@ -3,13 +3,21 @@
 <%- include('../partials/userLogged') %>
 
 
-<div class="divForm">
+<div class="div22">
     <h1 class="title1"><%= commission.course_commission_course.course_name %></h1>
 <h1 class="title2 title3">Comisión <%= commission.commission %></h1>
 <div class="div12" id="commissionId"><%= commission.id %></div>
 
 <% for( let i = 0; i < data.length; i++ ) { %>
-        <h1 class="title2"><%= data[i].simulatorName %></h1>
+    <div class="div23">
+        <h1 class="title2 title6"><%= data[i].simulatorName %></h1>
+    </div>
+        <div class="div21">
+            <p class="p6"><b>Ejercicios:</b></p>
+            <% for( let o = 0; o < data[i].simulatorExercises.length; o++ ) { %>
+                <p class="p6"><%= (o + 1) + ': ' + data[i].simulatorExercises[o].exerciseName %></p>
+            <% } %>
+        </div>
         <div class="divFlex8">
         <% if (data[i].studentsResults.length == 0) { %>
             <p class="p4"><i class="fa-solid fa-triangle-exclamation"></i>  &nbsp No se registran datos para el simulador "<%= data[i].simulatorName  %>"</p>
@@ -23,7 +31,7 @@
                             </tr>
                             <tr class="tr1">
                                 <% for( let j = 0; j < data[i].simulatorExercises.length; j++ ) { %>
-                                    <th class="tableTitle1 tableTitle3" id = <%= 'exercise' + data[i].simulatorExercises[j].exerciseId %>><%= data[i].simulatorExercises[j].exerciseName +' '%><i class="fa-solid fa-angle-right" id=<%= 'angleRight' + data[i].simulatorExercises[j].exerciseId %>></i></i><i class="fa-solid fa-angle-left angle1Display" id=<%= 'angleLeft' + data[i].simulatorExercises[j].exerciseId %>></i>&nbsp</th>
+                                    <th class="tableTitle1 tableTitle3" id = <%= 'exercise' + data[i].simulatorExercises[j].exerciseId %>><%= (j+1) +' '%><i class="fa-solid fa-angle-right" id=<%= 'angleRight' + data[i].simulatorExercises[j].exerciseId %>></i></i><i class="fa-solid fa-angle-left angle1Display" id=<%= 'angleLeft' + data[i].simulatorExercises[j].exerciseId %>></i>&nbsp</th>
                                 <% } %>
                             </tr>
                             <% for( let k = 0; k < data[i].studentsResults.length; k++ ) { %>
@@ -41,6 +49,7 @@
                             <% } %>
                         </table>
                         <div class="div10" id="divDetailExercises"></div>
+                        <div class="div20" id="divStepComments"></div>
                     </div>
         
                     <% for( let z = 0; z < data[i].simulatorExercises.length; z++ ) { %>
@@ -65,7 +74,7 @@
                                             <i class="fa-solid fa-check stepPassed"></i>
                                             <% } %>
                                             <% if (data[i].studentsResults[x].exercisesResults[z].exercisesSteps[s].passed == 'no') { %>
-                                                <i class="fa-solid fa-xmark stepNotPassed"></i>
+                                                <i class="fa-solid fa-xmark stepNotPassed" id=<%= 'comment_' + data[i].studentsResults[x].exercisesResults[z].exercisesSteps[s].id %>></i>
                                             <% } %>
                                             <% if (data[i].studentsResults[x].exercisesResults[z].exercisesSteps[s].passed == '-' ) { %>
                                                 <i class="fa-solid fa-minus stepNotDone"></i>
@@ -76,6 +85,7 @@
                             <% } %>
                         </table>
                     <% } %>
+                    
                 </div>
         <% } %>
         <% for( let j = 0; j < data[i].simulatorExercises.length; j++ ) { %>
@@ -91,9 +101,5 @@
 <% } %>
 
 </div>
-
-
-
-
 
 <script src="/js/commissions.js"></script>

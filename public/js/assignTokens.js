@@ -2,8 +2,21 @@
 window.addEventListener('load',async()=>{
     
     const selectCompany = document.getElementById('selectCompany')
-    const notAssignedTokens = await (await fetch('http://localhost:3000/apis/not-assigned-tokens')).json()
-    const companies = await (await fetch('http://localhost:3000/apis/companies')).json()
+    
+    var notAssignedTokens = []
+    if(await fetch('http://localhost:3000/apis/not-assigned-tokens')){
+        notAssignedTokens = await (await fetch('http://localhost:3000/apis/not-assigned-tokens')).json()
+    }else{
+        notAssignedTokens = await (await fetch('https://malenbarcelo.wnpower.host/apis/not-assigned-tokens')).json()
+    }
+    
+    var companies = []
+    if(await fetch('http://localhost:3000/apis/companies')){
+        companies = await (await fetch('http://localhost:3000/apis/companies')).json()
+    }else{
+        companies = await (await fetch('https://malenbarcelo.wnpower.host/apis/companies')).json()
+    }
+    
     const tokensToAssignText = document.getElementById('tokensToAssignText')
     const admTokensToAssignText = document.getElementById('admTokensToAssignText')
     const teacherTokensToAssignText = document.getElementById('teacherTokensToAssignText')
@@ -48,7 +61,6 @@ window.addEventListener('load',async()=>{
                 noTokensToAssignText.classList.add('divFlex6Display')
             }
             
-            
         }else{
             tokensToAssignText.innerHTML = ''
             noTokensToAssignText.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> No posee licencias pendientes de asignación.'
@@ -56,10 +68,7 @@ window.addEventListener('load',async()=>{
             teacherTokensToAssignText.classList.add('divFlex6Display')
             studentTokensToAssignText.classList.add('divFlex6Display')
             noTokensToAssignText.classList.remove('divFlex6Display')
-            
         }
-        
-        
     })
 })
 

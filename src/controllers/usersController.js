@@ -37,9 +37,10 @@ const usersController = {
             if (userToLogin.id_user_categories == 1) {
                 return res.redirect('/tokens/generate')
             }
-            if (userToLogin.id_user_categories == 3 || userToLogin.id_user_categories == 2) {
+            else{
                 return res.redirect('/courses/my-courses')
             }
+                        
         }catch(error){
                 res.send('Ha ocurrido un error')
             }
