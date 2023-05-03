@@ -1,5 +1,5 @@
 const username = "malenbar_malenbarcelo"
-const password = "30941767Male-Male-Male-"
+const password = "30941767Male-"
 const database = "malenbar_schema_sim"
 
 module.exports = 
