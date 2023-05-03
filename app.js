@@ -50,6 +50,6 @@ app.use('/courses',coursesRoutes)
 app.use('/apis',apisRoutes)
 app.use('/simulators',simulatorsRoutes)
 
-
+console.log(bcrypt.hashSync('$2a$10$aPRHw9LwCtCx7UwUcyISzOstdKmMBLL7fHC0fy0DZKVUdpTD6mXRi',10))
 
 

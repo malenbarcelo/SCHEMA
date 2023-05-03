@@ -14,7 +14,7 @@
     <form action="/courses/create-commission" method="POST" name="formCreateCommission" class="form1">
         <% if (user.id_user_categories == 1) { %>
             <div>
-                <select name="selectCompany" class="input1 select1 <%= locals.errors && errors.selectCompany ? 'isInvalid' : null %>">
+                <select name="selectCompany" id="selectCompany" class="input1 select1 <%= locals.errors && errors.selectCompany ? 'isInvalid' : null %>">
                     <option value="default" selected>--Seleccione una institución--</option>
                     <% companies.forEach(company => { %>
                         <% if (company.company_name != 'Schema') { %>
@@ -31,7 +31,7 @@
             </div>
         <% } %>
         <div>
-            <select name="courseName" class="input1 select1 <%= locals.errors && errors.courseName ? 'isInvalid' : null %>">
+            <select name="courseName" id="selectCourse" class="input1 select1 <%= locals.errors && errors.courseName ? 'isInvalid' : null %>">
                 <option value="default" selected>--Seleccione un curso--</option>
                 <% courses.forEach(course => { %>
                     <option value="<%= course.course_name %>" <%= locals.oldData && oldData.courseName == course.course_name ? 'selected' : null %>><%= course.course_name %></option>
@@ -44,10 +44,10 @@
             </div>
         </div>
         <div>
-            <select name="teacherName" class="input1 select1 <%= locals.errors && errors.teacherName ? 'isInvalid' : null %>">
+            <select name="teacherName" id="selectTeacher" class="input1 select1 <%= locals.errors && errors.teacherName ? 'isInvalid' : null %>">
                 <option value="default" selected>--Seleccione un profesor--</option>
                 <% teachers.forEach(teacher => { %>
-                    <option value="<%= teacher.id %>" <%= locals.oldData && oldData.teacherName == teacher.id? 'selected' : null %>><%= teacher.first_name + ' ' + teacher.last_name + ' - ' +teacher.user_email %></option>
+                    <option value="<%= teacher.id %>" <%= locals.oldData && oldData.teacherName == teacher.id ? 'selected' : null %>><%= teacher.last_name + ', ' + teacher.first_name %></option>
                 <% }) %>
             </select>
             <div class="divError1">
@@ -80,6 +80,8 @@
         </div>
     </form>
 </div>
+
+<script type="module" src="/js/createCommission.js"></script>
 
     
 

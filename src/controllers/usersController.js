@@ -160,8 +160,7 @@ const usersController = {
             return res.status(200).json(users)
         }
         return res.status(200).json("Undefined user")
-    },
-    
+    },    
 }
 module.exports = usersController
 

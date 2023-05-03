@@ -131,15 +131,40 @@ const coursesController = {
     storeCommission: async(req,res) => {
         try{
             const companies = await db.Companies.findAll()
-            const courses = await db.Courses.findAll({where:{id_companies:req.session.userLogged.id_companies}})
-            const teachers = await db.Users.findAll({where:{
-                id_companies:req.session.userLogged.id_companies,
-                id_user_categories:3
-            }})
+            
+            var courses = []
+            var teachers = []
+                        
+            //if user logged is an administrator
+            if(req.session.userLogged.id_user_categories == 1 && req.body.selectCompany != 'default'){
+
+                const companyId =  await db.Companies.findOne({
+                    where:{company_name:req.body.selectCompany},
+                    raw:true
+                })
+
+                courses = await db.Courses.findAll({where:{
+                    id_companies:companyId.id,
+                }})
+                
+                teachers = await db.Users.findAll({where:{
+                    id_companies:companyId.id,
+                    id_user_categories:3
+                }})
+                
+            }else{
+
+                courses = await db.Courses.findAll({where:{id_companies:req.session.userLogged.id_companies}})
+            
+                teachers = await db.Users.findAll({where:{
+                    id_companies:req.session.userLogged.id_companies,
+                    id_user_categories:3
+                }})
+            }
+
             const resultValidation = validationResult(req)
 
             if(resultValidation.errors.length > 0){
-                console.log(req.body)
                 return res.render('courses/createCommission',{
                     title:'Crear comisión',
                     errors:resultValidation.mapped(),
@@ -193,6 +218,7 @@ const coursesController = {
                 successMessage1,
                 user:req.session.userLogged
             })
+            
         }catch(error){
             return res.send("Error")
         }
@@ -378,7 +404,6 @@ const coursesController = {
 
                 commissions = teacherCommissions
                 courses = teacherCourses
-
             }
 
             //if user logged is a student, get student courses and commissions
@@ -393,6 +418,7 @@ const coursesController = {
                 //add data to commission to get same array than companies and teachers
                 studentCommissions.forEach(studentCommission => {
                     studentCommission.course_commission_course = {'id':studentCommission.commission_data.id_courses}
+                    studentCommission.id = studentCommission.id_course_commissions
                     studentCommission.commission = studentCommission.commission_data.commission
                     studentCommission.start_date = studentCommission.commission_data.start_date
                     studentCommission.end_date = studentCommission.commission_data.end_date
@@ -415,7 +441,7 @@ const coursesController = {
 
             }
 
-            //return res.send(courses)
+            //return res.send(commissions)
 
             return res.render('courses/myCourses',{title:'Mis Cursos',commissions,courses,date})
 
@@ -712,6 +738,8 @@ const coursesController = {
                 nest:true,
                 include:[{all:true}]
             })
+
+            
 
             //get simulators
             const simulators = await db.Courses_simulators.findAll({

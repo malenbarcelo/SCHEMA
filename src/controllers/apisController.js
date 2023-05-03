@@ -179,11 +179,8 @@ const apisController = {
                 }else{
                     exercisesResults[i].stepsResults.push({'code':code,'description':description,'log_time':'-','type':'-','observations':'-'})
                 }
-                
             }
-            
         }
-
         return res.status(200).json(exercisesResults)
     },
     
@@ -238,45 +235,63 @@ const apisController = {
         try{
             const keys = Object.keys(req.body.answers)
 
-            //store in exercises_results
-            await db.Exercises_results.create({
-                id_exercises: req.body.id_exercises,
-                id_users: req.body.id_users,
-                id_simulators:req.body.id_simulators,
-                date: req.body.date,
-                grade: req.body.grade,
-                duration_secs: req.body.duration_secs
+            //find user token
+            const token = await db.Tokens.findOne({
+                attributes:['token'],
+                where:{id_users:req.body.id_users},
+                raw:true
             })
 
-            //get id of exercises_results
-            const idExercisesResults = await db.Exercises_results.findOne({
-                where:{
+            if(bcrypt.compareSync(token.token,req.body.token_hashed)){
+                //store in exercises_results
+                await db.Exercises_results.create({
                     id_exercises: req.body.id_exercises,
                     id_users: req.body.id_users,
-                    id_simulators: req.body.id_simulators,
+                    id_simulators:req.body.id_simulators,
                     date: req.body.date,
                     grade: req.body.grade,
                     duration_secs: req.body.duration_secs
-                },
-                attributes:[[sequelize.fn('max', sequelize.col('id')),'max']],
-                raw:true,
-                nest:true
                 })
 
-            //store answers
-            for (let i = 0; i < keys.length; i++) {
-                await db.Exercises_answers.create({
-                    id_exercises_results: idExercisesResults.max,
-                    id_exercises:req.body.id_exercises,
-                    id_users:req.body.id_users,
-                    id_simulators:req.body.id_simulators,
-                    description: req.body.answers[i].description,
-                    log_time: req.body.answers[i].log_time,
-                    type: req.body.answers[i].type,
-                    observations: req.body.answers[i].observations
-                })
+                //get id of exercises_results
+                const idExercisesResults = await db.Exercises_results.findOne({
+                    where:{
+                        id_exercises: req.body.id_exercises,
+                        id_users: req.body.id_users,
+                        id_simulators: req.body.id_simulators,
+                        date: req.body.date,
+                        grade: req.body.grade,
+                        duration_secs: req.body.duration_secs
+                    },
+                    attributes:[[sequelize.fn('max', sequelize.col('id')),'max']],
+                    raw:true,
+                    nest:true
+                    })
+
+                    //store answers
+                for (let i = 0; i < keys.length; i++) {
+                    await db.Exercises_answers.create({
+                        id_exercises_results: idExercisesResults.max,
+                        id_exercises:req.body.id_exercises,
+                        id_users:req.body.id_users,
+                        id_simulators:req.body.id_simulators,
+                        description: req.body.answers[i].description,
+                        log_time: req.body.answers[i].log_time,
+                        type: req.body.answers[i].type,
+                        observations: req.body.answers[i].observations
+                    })
+                }
+                const postResult = {
+                    'status':'Datos guardados correctamente'
+                }
+                return res.status(200).json(postResult)
+            }else{
+                const postResult = {
+                    'status':'Error de validación'
+                }
+                return res.status(200).json(postResult)
             }
-            return res.status(200).json(req.body)
+
         }catch(error){
             return res.send('Ha ocurrido un error')
         }
@@ -286,15 +301,55 @@ const apisController = {
             const email = req.params.email
             
             //find user
-            const user = await db.Users.findOne({
+            const userPassword = await db.Users.findOne({
+                attributes:['id','password'],
                 where:{user_email:email},
-                raw:true
+                raw:true,
             })
+            //find token
+            const userToken = await db.Tokens.findOne({
+                attributes:['token'],
+                where:{id_users:userPassword.id},
+                raw:true,
+            })
+
+            const user = {
+                'passwordHashed': userPassword.password,
+                'tokenHashed':userToken.token
+            }
 
             //newPassword = bcrypt.hashSync(req.body.password,10)
             //console.log(bcrypt.compareSync(password, user.password))
             
             return res.status(200).json(user)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
+    },
+    companyCourses:async(req,res) =>{
+        try{
+            idCompany = req.params.idCompany
+
+            const companyCourses = await db.Courses.findAll({
+                where:{id_companies:idCompany},
+                raw:true
+            })
+            return res.status(200).json(companyCourses)
+
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
+    },
+    companyTeachers:async(req,res) =>{
+        try{
+            idCompany = req.params.idCompany
+
+            const companyTeachers = await db.Users.findAll({
+                where:{id_companies:idCompany, id_user_categories:3},
+                raw:true
+            })
+            return res.status(200).json(companyTeachers)
+
         }catch(error){
             return res.send('Ha ocurrido un error')
         }
