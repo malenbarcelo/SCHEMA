@@ -21,6 +21,7 @@ router.get('/exercise-answers/:idExercise/:idStudent',apisMiddleware,apisControl
 router.get('/steps-wrong-anwers/:idExercise',apisController.userLoggedWrongAnswers)
 router.get('/company-courses/:idCompany',apisController.companyCourses)
 router.get('/company-teachers/:idCompany',apisController.companyTeachers)
+router.get('/company-students/:idCompany',apisController.companyStudents)
 
 
 module.exports = router

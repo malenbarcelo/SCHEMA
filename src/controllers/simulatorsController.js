@@ -81,7 +81,19 @@ const simulatorsController = {
       }catch(error){
         return res.send('Ha ocurrido un error')
       }
-    }     
+    },
+    simulatorsData: async(req,res) => {
+      try{
+        const simulators = await db.Simulators.findAll({
+          order:[['simulator_name',"ASC"]],
+          raw:true
+        })
+
+        return res.render('simulators/allSimulators',{title:'Simuladores',simulators})
+      }catch(error){
+        return res.send('Error')
+      }
+    },     
 }
 module.exports = simulatorsController
 

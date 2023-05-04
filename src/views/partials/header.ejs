@@ -31,6 +31,15 @@
                     <a class = "a2SideNavBar" href="/courses/my-courses">Mis Cursos</a>
                 <% } %>
             </div>
+            <div class="divMenu">
+                <% if (locals.isLogged && (userLogged.id_user_categories == 1)) { %>
+                    <div class = "a1SideNavBar">DATOS</div>
+                <% } %>
+                <% if (locals.isLogged && userLogged.id_user_categories == 1) { %>
+                    <a class = "a2SideNavBar" href="/courses/courses-data">Cursos</a>
+                    <a class = "a2SideNavBar" href="/simulators/simulators-data">Simuladores</a>
+                <% } %>
+            </div>
         </div>
         
 </div>

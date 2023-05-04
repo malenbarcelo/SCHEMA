@@ -92,6 +92,13 @@ const coursesFormsValidations = {
             })
         ],
     assignStudentsFormValidations: [
+        body('selectCompany')
+            .custom(async(value,{ req }) => {
+                if(req.session.userLogged.id_user_categories == 1 && req.body.selectCompany == 'default'){
+                    throw new Error('Seleccione una institución')
+                }
+                return true
+            }),
         body('selectCourse')
             .custom(async(value,{ req }) => {
                 if(req.body.selectCourse == 'default'){
@@ -108,6 +115,15 @@ const coursesFormsValidations = {
             }),
         body('fileAssignStudents')
             .custom(async(value,{ req }) => {
+                if(req.session.userLogged.id_user_categories == 1){
+                    const company = await db.Companies.findAll({
+                        where:{company_name:req.body.selectCompany},
+                        raw:true
+                    })
+                    const idCompany = company[0].id
+                }else{
+                    idCompany = req.session.userLogged.id_companies
+                }
                 let file = req.file
                 let acceptedExtensions = ['.xls','.xlsx','.xlsm']               
                 if(!file){
@@ -119,10 +135,11 @@ const coursesFormsValidations = {
                     }else{
                         const fileName = req.file.filename
                         const emails = await readXlsFile('public/files/assignStudents/' + fileName)
+                        
                         const students = await db.Users.findAll({
                             where:{
                                 id_user_categories:4,
-                                id_companies:req.session.userLogged.id_companies
+                                id_companies:idCompany
                             },
                             nest:true,
                             raw:true
@@ -136,7 +153,7 @@ const coursesFormsValidations = {
                                     where:{
                                         user_email:emails[i][0],
                                         id_user_categories:4,
-                                        id_companies: req.session.userLogged.id_companies
+                                        id_companies: idCompany
                                     },
                                     nest:true,
                                     raw:true

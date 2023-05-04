@@ -32,5 +32,6 @@ router.post('/students-assignation',admsMiddleware,upload.single('fileAssignStud
 router.get('/my-courses',coursesController.myCourses)
 router.get('/commissions/:idCommission',coursesController.filterCommission)
 router.get('/commissions/:idCommission/:idStudent',coursesController.filterCommissionAndStudent)
+router.get('/courses-data',coursesController.coursesData)
 
 module.exports = router

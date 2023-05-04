@@ -4,6 +4,7 @@ window.addEventListener('load',()=>{
 
     const selectCourse = document.getElementById('selectCourse')
     const selectCommission = document.getElementById('selectCommission')
+    const selectCompany = document.getElementById('selectCompany')
         
     selectCourse.addEventListener("change",async(e)=>{
 
@@ -41,7 +42,7 @@ window.addEventListener('load',()=>{
 
         if (commissionsForSelect.length == 0 && selectCourse.value != 'default') {
             selectCourse.classList.add('isInvalid')
-            const divError = document.querySelector('.divError1')
+            const divError = document.getElementById('divErrorSelectCourse')
             divError.innerHTML = 'El curso seleccionado no tiene comisiones asociadas. Primero debe crear una comisión'
         }else{
             selectCourse.classList.remove('isInvalid')
@@ -53,6 +54,53 @@ window.addEventListener('load',()=>{
         selectCommission.classList.remove('isInvalid')
         const divError2 = document.getElementById('divErrorSelectCommission')
         divError2.innerHTML = ''
+    })
+
+    selectCompany.addEventListener("change",async(e)=>{
+        const noteForAdministrator = document.getElementById('noteForAdministrator')
+        const divErrorSelectCompany = document.getElementById('divErrorSelectCompany')
+        selectCommission.innerHTML='<option value="default" selected>--Seleccione una comisión--</option>'
+
+        const selectedOption = (e.target.options[e.target.selectedIndex]).innerText
+
+        if(selectedOption != '--Seleccione una institución--'){
+
+            selectCourse.classList.remove('isInvalid')
+            selectCompany.classList.remove('isInvalid')
+            
+            const divError = document.getElementById('divErrorSelectCourse')
+            divError.innerHTML = ''
+            divErrorSelectCompany.innerHTML = ''
+            
+            //get company id
+            const companies = await (await fetch(dominio + '/apis/companies')).json()
+            const company = companies.filter(company => company.company_name == selectedOption )
+            const idCompany = company[0].id
+
+            const companyStudents = await (await fetch(dominio + '/apis/company-students/' + idCompany)).json()
+
+            //add administrator note
+            if(companyStudents.length == 0){
+                noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> La institución no posee alumnos registrads para asociar a la comisión.</p>'
+            }else{
+                noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de '+ companyStudents.length +' alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>'
+            }
+
+            //get company courses
+            const companyCourses = await (await fetch(dominio + '/apis/company-courses/' + idCompany)).json()
+            selectCourse.innerHTML='<option value="default" selected>--Seleccione una curso--</option>'
+            for (let i = 0; i < companyCourses.length; i++) {
+                selectCourse.innerHTML += '<option value=' + companyCourses[i].course_name + '>' + companyCourses[i].course_name + '</option>'
+            }
+
+
+        }else{
+            noteForAdministrator.innerHTML = ''
+            selectCourse.innerHTML='<option value="default" selected>--Seleccione una curso--</option>'
+        }
+        
+        
+        
     })
 
     

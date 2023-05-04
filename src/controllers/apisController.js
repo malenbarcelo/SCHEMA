@@ -314,13 +314,11 @@ const apisController = {
             })
 
             const user = {
+                'id_user': userPassword.id,
                 'passwordHashed': userPassword.password,
                 'tokenHashed':userToken.token
             }
 
-            //newPassword = bcrypt.hashSync(req.body.password,10)
-            //console.log(bcrypt.compareSync(password, user.password))
-            
             return res.status(200).json(user)
         }catch(error){
             return res.send('Ha ocurrido un error')
@@ -331,6 +329,7 @@ const apisController = {
             idCompany = req.params.idCompany
 
             const companyCourses = await db.Courses.findAll({
+                order:[['course_name','ASC']],
                 where:{id_companies:idCompany},
                 raw:true
             })
@@ -349,6 +348,20 @@ const apisController = {
                 raw:true
             })
             return res.status(200).json(companyTeachers)
+
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
+    },
+    companyStudents:async(req,res) =>{
+        try{
+            idCompany = req.params.idCompany
+
+            const companyStudents = await db.Users.findAll({
+                where:{id_companies:idCompany, id_user_categories:4},
+                raw:true
+            })
+            return res.status(200).json(companyStudents)
 
         }catch(error){
             return res.send('Ha ocurrido un error')

@@ -234,6 +234,7 @@ const coursesController = {
                 raw:true
             })
             const companies = await db.Companies.findAll({raw:true,nest:true})
+            
             const courses = await db.Courses.findAll({
                 where: {id_companies:req.session.userLogged.id_companies},
                 raw:true,
@@ -255,15 +256,27 @@ const coursesController = {
     processAssignStudents: async(req,res) => {
         try{
             const companies = await db.Companies.findAll({raw:true,nest:true})
+
+            var idCompany = ''
+            
+            if(req.session.userLogged.id_user_categories == 1 && req.body.selectCompany != 'default' ){
+                const company = await db.Companies.findAll({
+                    where:{company_name:req.body.selectCompany},
+                    raw:true
+                })
+                idCompany = company[0].id                
+            }else{
+                idCompany = req.session.userLogged.id_companies
+            }
             const courses = await db.Courses.findAll({
-                where: {id_companies:req.session.userLogged.id_companies},
+                where: {id_companies:idCompany},
                 raw:true,
                 nest:true
             })
             const students = await db.Users.findAll({
                 where:{
                     id_user_categories:4,
-                    id_companies:req.session.userLogged.id_companies
+                    id_companies:idCompany
                 },
                 nest:true,
                 raw:true
@@ -284,6 +297,7 @@ const coursesController = {
                     }
 
                 });
+
                 return res.render('courses/assignStudents',{
                     errors:resultValidation.mapped(),
                     oldData: req.body,
@@ -871,7 +885,23 @@ const coursesController = {
         }catch(error){
             return res.send('Ha ocurrido un error')
         }
-    }
+    },
+    coursesData: async(req,res) => {
+        try{
+          const courses = await db.Courses.findAll({
+            order:[['course_name',"ASC"]],
+            raw:true,
+            nest:true,
+            include:[{all:true}]
+          })
+
+          console.log(courses)
+  
+          return res.render('courses/allCourses',{title:'Cursos',courses})
+        }catch(error){
+          return res.send('Error')
+        }
+      },     
 }
 
 module.exports = coursesController

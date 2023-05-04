@@ -10,32 +10,44 @@
 
 <div class="divForm">
     <h1 class="title1">Asignar alumnos a comisión</h1>
-
-    <div class="div5">        
-        <p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de <%= students.length %> alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>
-    </div>
     <form action="/courses/students-assignation" enctype="multipart/form-data" method="POST" name="formAssignStudents" class="form1">
         <% if (user.id_user_categories == 1) { %>
             <div>
-                <select name="selectCompany" class="input1 select1">
+                <select name="selectCompany" id="selectCompany" class="input1 select1 <%= locals.errors && errors.selectCompany ? 'isInvalid' : null %>">
                     <option value="default" selected>--Seleccione una institución--</option>
                     <% companies.forEach(company => { %>
-                        <option value="<%= company.company_name %>"><%= company.company_name %></option>
+                        <% if (company.company_name != 'Schema') { %>
+                            <option value="<%= company.company_name %>" <%= locals.oldData && oldData.selectCompany == company.company_name ? 'selected' : null %>><%= company.company_name %></option>
+                        <% } %>
                     <% }) %>
                 </select>
                 <div class="divError1" id="divErrorSelectCompany">
-                    <% if (locals.errors && errors.selectCourse) { %>
-                        <%= errors.selectCourse.msg %> 
+                    <% if (locals.errors && errors.selectCompany) { %>
+                        <%= errors.selectCompany.msg %> 
                     <% } %>
                 </div>
             </div>
         <% } %>
+
+        <% if (user.id_user_categories == 2) { %>
+            <div class="div5" id="noteForCompanies">        
+                <p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de <%= students.length %> alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>
+            </div>
+        <% } %>
+        <% if (user.id_user_categories == 1) { %>
+            <div class="div5" id="noteForAdministrator"></div>
+        <% } %>
+
         <div>
             <select name="selectCourse" class="input1 select1 <%= locals.errors && errors.selectCourse ? 'isInvalid' : null %>" id="selectCourse">
                 <option value="default" selected>--Seleccione un curso--</option>
-                <% courses.forEach(course => { %>
-                    <option value="<%= course.course_name %>" <%= locals.oldData && oldData.selectCourse == course.course_name ? 'selected' : null %>><%= course.course_name %></option>
-                <% }) %>
+
+                <% if (user.id_user_categories == 2 || (user.id_user_categories == 1 && locals.oldData && oldData.selectCompany != 'default')) { %>
+                    <% courses.forEach(course => { %>
+                        <option value="<%= course.course_name %>" <%= locals.oldData && oldData.selectCourse == course.course_name ? 'selected' : null %>><%= course.course_name %></option>
+                    <% }) %>
+                <% } %>
+                
             </select>
             <div class="divError1" id="divErrorSelectCourse">
                 <% if (locals.errors && errors.selectCourse) { %>
@@ -49,7 +61,7 @@
                 <option value="default" selected>--Seleccione una comisión--</option>
                 <% if (locals.oldData && oldData.selectCourse) { %>
                     <% commissionsFiltered.forEach(commission => { %>
-                        <option value="<%= commission.id %>"><%= commission.commission + ': [inicio: ' + commission.start_date + ' -- fin: ' + commission.end_date + ']' %></option>
+                        <option value="<%= commission.id %>" <%= locals.oldData && oldData.selectCommission == commission.id ? 'selected' : null %>><%= commission.commission + ': [inicio: ' + commission.start_date + ' -- fin: ' + commission.end_date + ']' %></option>
                     <% }) %>
                 <% } %>
             </select>

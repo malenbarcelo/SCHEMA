@@ -11,6 +11,7 @@ router.get('/create',admsMiddleware,simulatorsController.createSimulator)
 router.post('/create',admsMiddleware,simulatorsFormsValidations.createSimulatorForm,simulatorsController.storeSimulator)
 router.get('/create-exercise',admsMiddleware,simulatorsController.createExercise)
 router.post('/create-exercise',admsMiddleware,simulatorsFormsValidations.createExerciseForm,simulatorsController.storeExercise)
+router.get('/simulators-data',admsMiddleware,simulatorsController.simulatorsData)
 
 module.exports = router
 

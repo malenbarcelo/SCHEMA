@@ -181,7 +181,6 @@ a{
     padding-top: 0px;
     width:fit-content;
     max-width: 250px;
-    color:red
 }
 
 .div21{
@@ -404,6 +403,10 @@ input::-webkit-inner-spin-button {
     display: none;
 }
 
+#noteForAdministrator{
+    margin-top:5px
+}
+
 .p1{
     margin-top:0px;
     margin-bottom:10px
@@ -466,6 +469,10 @@ input::-webkit-inner-spin-button {
     color:green
 }
 
+.table1{
+    margin: auto;
+}
+
 .table2{
     display: none;
 }
@@ -494,6 +501,10 @@ input::-webkit-inner-spin-button {
     text-align: center;
     width: max-content;
     padding:2px 5px
+}
+
+.td3{
+    text-align: left;
 }
 
 .title1{
