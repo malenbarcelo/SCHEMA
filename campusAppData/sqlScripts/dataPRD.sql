@@ -8,7 +8,7 @@ INSERT INTO malenbar_schema_sim.user_categories (category_name) VALUES('alumno')
 INSERT INTO malenbar_schema_sim.companies (company_name,enabled) VALUES('Schema',1);
 
 /*users*/
-INSERT INTO malenbar_schema_sim.users (first_name,last_name,id_document,user_email,password,id_user_categories,id_companies,enabled) VALUES('Francisco','Barcelo',32986577,'lfbarcelo@gmail.com','$2a$10$HgNUd.rHxEMNl6xGvJYuXuAwzPi4a6lUN/0NWecyXrBArxcRF47le',1,1,1);
+INSERT INTO malenbar_schema_sim.users (first_name,last_name,id_document,user_email,password,id_user_categories,id_companies,enabled) VALUES('Francisco','Barcelo',11111111,'lfbarcelo@gmail.com','$2a$10$HgNUd.rHxEMNl6xGvJYuXuAwzPi4a6lUN/0NWecyXrBArxcRF47le',1,1,1);
 
 /*Simulators*/
 INSERT INTO malenbar_schema_sim.simulators (simulator_name,description,enabled) VALUES('simulator1','simulador uno',1);
