@@ -4,7 +4,7 @@ function admsMiddleware(req,res,next){
         return res.redirect('/users/login')
     }else{
         if(req.session.userLogged.id_user_categories != 1 && req.session.userLogged.id_user_categories != 2){
-            return res.redirect('/users/profile')
+            return res.redirect('/courses/my-courses')
         }
     }
     return next()

@@ -177,9 +177,16 @@ const coursesController = {
             }
 
             //get course data
+            var idCompany = ''
+            if (req.session.userLogged.id_user_categories == 1) {
+                idCompany = 3
+            }else{
+                idCompany = req.session.userLogged.id_companies
+            }
+
             const courseData = await db.Courses.findOne({
                 attributes:['id','course_number'],
-                where:{course_name:req.body.courseName},
+                where:{course_name:req.body.courseName, id_companies:idCompany},
                 nest:true,
                 raw:true
                 })
@@ -220,7 +227,7 @@ const coursesController = {
             })
             
         }catch(error){
-            return res.send("Error")
+            return res.send('Ha ocurrido un error')
         }
     },
     assignStudents: async(req,res) => {

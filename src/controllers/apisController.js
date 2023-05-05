@@ -4,12 +4,20 @@ const bcrypt = require('bcryptjs')
 
 const apisController = {
     commissionsList: async(req,res) =>{
-        const commissions = await db.Course_commissions.findAll({nest:true,raw:true})
-        return res.status(200).json(commissions)
+        try{
+            const commissions = await db.Course_commissions.findAll({nest:true,raw:true})
+            return res.status(200).json(commissions)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
     },
     coursesList: async(req,res) =>{
-        const courses = await db.Courses.findAll({nest:true,raw:true})
-        return res.status(200).json(courses)
+        try{
+            const courses = await db.Courses.findAll({nest:true,raw:true})
+            return res.status(200).json(courses)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
     },
     coursesFiltered:async(req,res) =>{
         try{
@@ -60,7 +68,6 @@ const apisController = {
     },
     userLoggedExercises:async(req,res) =>{
         try{
-
             var courses = []
             var exercises = []
 
@@ -113,123 +120,150 @@ const apisController = {
         }
     },
     notAssignedTokens: async(req,res) =>{
-        const notAssignedTokens = await db.Tokens.findAll({
-            where:{id_users:null},
-            nest:true
-        })
-        return res.status(200).json(notAssignedTokens)
+        try{
+            const notAssignedTokens = await db.Tokens.findAll({
+                where:{id_users:null},
+                nest:true
+            })
+            return res.status(200).json(notAssignedTokens)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
     },
     companies: async(req,res) =>{
-        const companies = await db.Companies.findAll({
-            nest:true
-        })
-        return res.status(200).json(companies)
+        try{
+            const companies = await db.Companies.findAll({
+                nest:true
+            })
+            return res.status(200).json(companies)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
     },
     studentsExercises: async(req,res) =>{
+        try{
+            const idCommission = req.params.idCommission
 
-        const idCommission = req.params.idCommission
-
-        const studentsExercises = await db.Course_commissions_students.findAll({
-            where:{id_course_commissions: idCommission},
-            raw:true,
-            nest:true,  
-            include:[{all:true}]
-        })
+            const studentsExercises = await db.Course_commissions_students.findAll({
+                where:{id_course_commissions: idCommission},
+                raw:true,
+                nest:true,  
+                include:[{all:true}]
+            })
 
         return res.status(200).json(studentsExercises)
+
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
+        
     },
     exercisesResults: async(req,res) =>{
+        try{
+            const idExercise = req.params.idExercise
+            const idStudent = req.params.idStudent
 
-        const idExercise = req.params.idExercise
-        const idStudent = req.params.idStudent
+            const exercisesResults = await db.Exercises_results.findAll({
+                where:{id_exercises: idExercise,id_users:idStudent},
+                order:[['date','DESC']],
+                raw:true,
+                nest:true,  
+                include:[{all:true}]
+            })
 
-        const exercisesResults = await db.Exercises_results.findAll({
-            where:{id_exercises: idExercise,id_users:idStudent},
-            order:[['date','DESC']],
-            raw:true,
-            nest:true,  
-            include:[{all:true}]
-        })
+            exercisesResults.map(exerciseResult => exerciseResult.stepsResults = [])
 
-        exercisesResults.map(exerciseResult => exerciseResult.stepsResults = [])
+            //All exercises steps
+            const exercisesSteps = await db.Exercises_answers.findAll({
+                attributes: [[sequelize.fn('DISTINCT', sequelize.col('description')), 'description']],
+                where:{id_exercises: idExercise},
+                order:[['description','ASC']],
+                raw:true
+            })
 
-        //All exercises steps
-        const exercisesSteps = await db.Exercises_answers.findAll({
-            attributes: [[sequelize.fn('DISTINCT', sequelize.col('description')), 'description']],
-            where:{id_exercises: idExercise},
-            order:[['description','ASC']],
-            raw:true
-        })
+            //Complete student exercises steps
+            for (let i = 0; i < exercisesResults.length; i++) {
+                for (let j = 0; j < exercisesSteps.length; j++) {
+                    const stepResult = await db.Exercises_answers.findOne({
+                        where:{id_exercises_results:exercisesResults[i].id,description:exercisesSteps[j].description},
+                        raw:true
+                    })
 
-        //Complete student exercises steps
-        for (let i = 0; i < exercisesResults.length; i++) {
-            for (let j = 0; j < exercisesSteps.length; j++) {
-                const stepResult = await db.Exercises_answers.findOne({
-                    where:{id_exercises_results:exercisesResults[i].id,description:exercisesSteps[j].description},
-                    raw:true
-                })
+                    const arrayDescription = exercisesSteps[j].description.split("_")
+                    const code = arrayDescription[0]
+                    const description = arrayDescription[1]
 
-                const arrayDescription = exercisesSteps[j].description.split("_")
-                const code = arrayDescription[0]
-                const description = arrayDescription[1]
+                    if(stepResult){
+                        exercisesResults[i].stepsResults.push({'code':code,'description':description,'log_time':stepResult.log_time,'type':stepResult.type,'observations':stepResult.observations})
 
-                if(stepResult){
-                    exercisesResults[i].stepsResults.push({'code':code,'description':description,'log_time':stepResult.log_time,'type':stepResult.type,'observations':stepResult.observations})
-
-                }else{
-                    exercisesResults[i].stepsResults.push({'code':code,'description':description,'log_time':'-','type':'-','observations':'-'})
+                    }else{
+                        exercisesResults[i].stepsResults.push({'code':code,'description':description,'log_time':'-','type':'-','observations':'-'})
+                    }
                 }
             }
+            return res.status(200).json(exercisesResults)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
         }
-        return res.status(200).json(exercisesResults)
     },
     
     exerciseAnswers: async(req,res) =>{
-
-        const idExercise = req.params.idExercise
-        const idStudent = req.params.idStudent
-        
-        const exercisesAnswers = await db.Exercises_answers.findAll({
-            where:{id_exercises: idExercise, id_users: idStudent},
-            raw:true,
-        })
+        try{
+            const idExercise = req.params.idExercise
+            const idStudent = req.params.idStudent
+            
+            const exercisesAnswers = await db.Exercises_answers.findAll({
+                where:{id_exercises: idExercise, id_users: idStudent},
+                raw:true,
+            })
 
         return res.status(200).json(exercisesAnswers)
+
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
     },
     userLoggedWrongAnswers: async(req,res) =>{
-
-        const idStudent =  req.session.userLogged.id
-        const idExercise =  req.params.idExercise
-        
-        const wrongAnswers = await db.Exercises_answers.findAll({
-            where:{id_users: idStudent,id_exercises:idExercise, type:'Error'},
-            raw:true,
-        })
+        try{
+            const idStudent =  req.session.userLogged.id
+            const idExercise =  req.params.idExercise
+            
+            const wrongAnswers = await db.Exercises_answers.findAll({
+                where:{id_users: idStudent,id_exercises:idExercise, type:'Error'},
+                raw:true,
+            })
 
         return res.status(200).json(wrongAnswers)
+
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
     },
     exerciseSteps: async(req,res) =>{
-
-        const idExercise = req.params.idExercise
+        try{
+            const idExercise = req.params.idExercise
         
-        //All exercises steps
-        let exerciseSteps = await db.Exercises_answers.findAll({
-            attributes: [[sequelize.fn('DISTINCT', sequelize.col('description')), 'description']],
-            where:{id_exercises: idExercise},
-            order:[['description','ASC']],
-            raw:true
-        })
+            //All exercises steps
+            let exerciseSteps = await db.Exercises_answers.findAll({
+                attributes: [[sequelize.fn('DISTINCT', sequelize.col('description')), 'description']],
+                where:{id_exercises: idExercise},
+                order:[['description','ASC']],
+                raw:true
+            })
 
-        exerciseSteps.forEach(exerciseStep => {
-            const arrayDescription = exerciseStep.description.split("_")
+            exerciseSteps.forEach(exerciseStep => {
+                const arrayDescription = exerciseStep.description.split("_")
+                
+                exerciseStep.code = arrayDescription[0]
+                exerciseStep.description = arrayDescription[1]
+                
+            });
+
+            return res.status(200).json(exerciseSteps)
             
-            exerciseStep.code = arrayDescription[0]
-            exerciseStep.description = arrayDescription[1]
-            
-        });
-
-
-        return res.status(200).json(exerciseSteps)
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
     },
     storeResults: async(req,res) =>{
         try{

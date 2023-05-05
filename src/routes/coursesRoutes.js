@@ -6,6 +6,9 @@ const path = require('path')
 const {body} = require('express-validator')
 const coursesFormsValidations = require('../validations/coursesFormsValidations.js')
 const admsMiddleware = require('../middlewares/admsMiddleware.js')
+const admMiddleware = require('../middlewares/admMiddleware.js')
+const authMiddleware = require('../middlewares/authMiddleware.js')
+const teacherMiddleware = require('../middlewares/teacherMiddleware.js')
 
 //Multer config
 const storage = multer.diskStorage({
@@ -29,9 +32,9 @@ router.get('/create-commission',admsMiddleware,coursesController.createCommissio
 router.post('/create-commission',admsMiddleware,coursesFormsValidations.createCommissionFormValidation,coursesController.storeCommission)
 router.get('/students-assignation',admsMiddleware,coursesController.assignStudents)
 router.post('/students-assignation',admsMiddleware,upload.single('fileAssignStudents'),coursesFormsValidations.assignStudentsFormValidations,coursesController.processAssignStudents)
-router.get('/my-courses',coursesController.myCourses)
-router.get('/commissions/:idCommission',coursesController.filterCommission)
-router.get('/commissions/:idCommission/:idStudent',coursesController.filterCommissionAndStudent)
-router.get('/courses-data',coursesController.coursesData)
+router.get('/my-courses',authMiddleware,coursesController.myCourses)
+router.get('/commissions/:idCommission',teacherMiddleware,coursesController.filterCommission)
+router.get('/commissions/:idCommission/:idStudent',authMiddleware,coursesController.filterCommissionAndStudent)
+router.get('/courses-data',admMiddleware,coursesController.coursesData)
 
 module.exports = router

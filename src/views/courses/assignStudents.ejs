@@ -8,6 +8,15 @@
     </script>
 <% } %>
 
+<div class="div12" id="idCompany">
+    <% if (user.id_user_categories == 2) { %>
+        <%= user.id_companies %>
+    <% } %>
+    <% if (user.id_user_categories == 1) { %>
+        usuario administrador
+    <% } %>
+</div>
+
 <div class="divForm">
     <h1 class="title1">Asignar alumnos a comisión</h1>
     <form action="/courses/students-assignation" enctype="multipart/form-data" method="POST" name="formAssignStudents" class="form1">

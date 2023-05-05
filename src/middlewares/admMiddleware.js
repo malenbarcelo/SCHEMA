@@ -4,10 +4,10 @@ function admMiddleware(req,res,next){
         return res.redirect('/users/login')
     }else{
         if(req.session.userLogged.id_user_categories !=1){
-            return res.redirect('/users/profile')
+            return res.redirect('/courses/my-courses')
         }
         if(!req.session.userLogged){
-            return res.redirect('/users/login')
+            return res.redirect('/courses/my-courses')
         }
     }
 

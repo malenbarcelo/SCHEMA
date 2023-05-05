@@ -1,25 +1,72 @@
 import { dominio } from "./dominio.js"
 
-window.addEventListener('load',()=>{
+window.addEventListener('load',async()=>{
 
     const selectCourse = document.getElementById('selectCourse')
     const selectCommission = document.getElementById('selectCommission')
     const selectCompany = document.getElementById('selectCompany')
-        
+    const noteForAdministrator = document.getElementById('noteForAdministrator')
+    const divErrorSelectCompany = document.getElementById('divErrorSelectCompany')
+    const divError = document.getElementById('divErrorSelectCourse')
+    const companies = await (await fetch(dominio + '/apis/companies')).json()
+    const courses = await (await fetch(dominio + '/apis/courses')).json()
+    const allCommissions = await (await fetch(dominio + '/apis/commissions')).json()
+    var idCompany = ''
+    
+    if(selectCompany != null){
+
+        selectCompany.addEventListener("change",async(e)=>{
+
+            selectCommission.innerHTML='<option value="default" selected>--Seleccione una comisión--</option>'
+
+            const selectedOption = (e.target.options[e.target.selectedIndex]).innerText
+
+            if(selectedOption != '--Seleccione una institución--'){
+
+                selectCourse.classList.remove('isInvalid')
+                selectCompany.classList.remove('isInvalid')
+                divError.innerHTML = ''
+                divErrorSelectCompany.innerHTML = ''
+                
+                //get company id
+                const company = companies.filter(company => company.company_name == selectedOption )
+                idCompany = company[0].id
+
+                //get cmpany students
+                const companyStudents = await (await fetch(dominio + '/apis/company-students/' + idCompany)).json()
+
+                //add administrator note
+                if(companyStudents.length == 0){
+                    noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> La institución no posee alumnos registrads para asociar a la comisión.</p>'
+                }else{
+                    noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de '+ companyStudents.length +' alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>'
+                }
+
+                //get company courses
+                const companyCourses = await (await fetch(dominio + '/apis/company-courses/' + idCompany)).json()
+                selectCourse.innerHTML='<option value="default" selected>--Seleccione una curso--</option>'
+                for (let i = 0; i < companyCourses.length; i++) {
+                    selectCourse.innerHTML += '<option value=' + companyCourses[i].course_name + '>' + companyCourses[i].course_name + '</option>'
+                }
+
+            }else{
+                noteForAdministrator.innerHTML = ''
+                selectCourse.innerHTML='<option value="default" selected>--Seleccione una curso--</option>'
+            }
+        })
+    }else{
+        idCompany = document.getElementById('idCompany').innerHTML
+    }
+    
     selectCourse.addEventListener("change",async(e)=>{
 
         //get the selected option
         const selectedOption = (e.target.options[e.target.selectedIndex]).innerText
 
-        //get all the courses
-        const courses = await (await fetch(dominio + '/apis/courses')).json()
-        
         //get course id
-        const courseId = courses.filter(course =>course.course_name == selectedOption)
+        const courseId = courses.filter(course => (course.course_name == selectedOption && course.id_companies == idCompany))
 
-        //get commissions list
-        const allCommissions = await (await fetch(dominio + '/apis/commissions')).json()
-        
+        //get commissions
         var commissionsFiltered = []
 
         if(selectCourse.value != 'default'){
@@ -32,7 +79,7 @@ window.addEventListener('load',()=>{
             commissionsFiltered.forEach(commission => {
                 commissionsForSelect.push({id:commission.id, commissionName:commission.commission + ': [inicio: ' + commission.start_date + ' -- fin: ' + commission.end_date + "]"})
             })
-        }        
+        }
 
         selectCommission.innerHTML='<option value="default" selected>--Seleccione una comisión--</option>'
 
@@ -55,53 +102,4 @@ window.addEventListener('load',()=>{
         const divError2 = document.getElementById('divErrorSelectCommission')
         divError2.innerHTML = ''
     })
-
-    selectCompany.addEventListener("change",async(e)=>{
-        const noteForAdministrator = document.getElementById('noteForAdministrator')
-        const divErrorSelectCompany = document.getElementById('divErrorSelectCompany')
-        selectCommission.innerHTML='<option value="default" selected>--Seleccione una comisión--</option>'
-
-        const selectedOption = (e.target.options[e.target.selectedIndex]).innerText
-
-        if(selectedOption != '--Seleccione una institución--'){
-
-            selectCourse.classList.remove('isInvalid')
-            selectCompany.classList.remove('isInvalid')
-            
-            const divError = document.getElementById('divErrorSelectCourse')
-            divError.innerHTML = ''
-            divErrorSelectCompany.innerHTML = ''
-            
-            //get company id
-            const companies = await (await fetch(dominio + '/apis/companies')).json()
-            const company = companies.filter(company => company.company_name == selectedOption )
-            const idCompany = company[0].id
-
-            const companyStudents = await (await fetch(dominio + '/apis/company-students/' + idCompany)).json()
-
-            //add administrator note
-            if(companyStudents.length == 0){
-                noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> La institución no posee alumnos registrads para asociar a la comisión.</p>'
-            }else{
-                noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de '+ companyStudents.length +' alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>'
-            }
-
-            //get company courses
-            const companyCourses = await (await fetch(dominio + '/apis/company-courses/' + idCompany)).json()
-            selectCourse.innerHTML='<option value="default" selected>--Seleccione una curso--</option>'
-            for (let i = 0; i < companyCourses.length; i++) {
-                selectCourse.innerHTML += '<option value=' + companyCourses[i].course_name + '>' + companyCourses[i].course_name + '</option>'
-            }
-
-
-        }else{
-            noteForAdministrator.innerHTML = ''
-            selectCourse.innerHTML='<option value="default" selected>--Seleccione una curso--</option>'
-        }
-        
-        
-        
-    })
-
-    
 })

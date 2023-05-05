@@ -142,9 +142,6 @@ const usersController = {
             return res.send('Ha ocurrido un error')
         }
     },
-    profile: (req,res) => {
-        return res.render('users/profile',{title:'Perfil',user:req.session.userLogged})
-    },
     logout: (req,res) => {
         req.session.destroy()
         return res.redirect('/')
@@ -155,11 +152,15 @@ const usersController = {
         return res.status(200).json(users)
     },
     filterUser: async(req,res) =>{
-        const users = await db.Users.findAll({where:{user_email:req.params.email}})
-        if (users.length > 0){
-            return res.status(200).json(users)
+        try{
+            const users = await db.Users.findAll({where:{user_email:req.params.email}})
+            if (users.length > 0){
+                return res.status(200).json(users)
+            }
+            return res.status(200).json("Undefined user")
+        }catch(error){
+            return res.send('Ha ocurrido un error')
         }
-        return res.status(200).json("Undefined user")
     },    
 }
 module.exports = usersController
