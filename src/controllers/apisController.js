@@ -340,6 +340,7 @@ const apisController = {
                 where:{user_email:email},
                 raw:true,
             })
+
             //find token
             const userToken = await db.Tokens.findOne({
                 attributes:['token'],
@@ -350,10 +351,11 @@ const apisController = {
             const user = {
                 'id_user': userPassword.id,
                 'passwordHashed': userPassword.password,
-                'tokenHashed':userToken.token
+                'tokenHashed': userToken == null ? 'NA': userToken.token
             }
 
             return res.status(200).json(user)
+            
         }catch(error){
             return res.send('Ha ocurrido un error')
         }

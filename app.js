@@ -11,6 +11,7 @@ const session = require('express-session')
 const userLoggedMiddleware = require('./src/middlewares/userLoggedMiddleware.js')
 const bcrypt = require('bcryptjs')
 const app = express()
+const nodemailer = require('nodemailer');
 
 //use public as statis
 app.use(express.static(publicPath))
@@ -51,5 +52,13 @@ app.use('/apis',apisRoutes)
 app.use('/simulators',simulatorsRoutes)
 
 //console.log(bcrypt.hashSync('',10))
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'your.email@gmail.com',
+      pass: 'your-password'
+    }
+  });
 
 
