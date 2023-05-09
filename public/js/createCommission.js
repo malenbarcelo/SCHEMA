@@ -41,7 +41,7 @@ window.addEventListener('load',async()=>{
 
             //complete teachers select
             for (let i = 0; i < companyTeachers.length; i++) {
-                selectTeacher.innerHTML += '<option value=' + companyTeachers[i].id + '>' + companyTeachers[i].last_name + ', ' + companyTeachers[i].first_name + '</option>'
+                selectTeacher.innerHTML += '<option value=' + companyTeachers[i].id + '>' + companyTeachers[i].last_name + ', ' + companyTeachers[i].first_name + ' (' + companyTeachers[i].user_email + ')</option>'
             }
         }else{
             //empty course and teacher select 

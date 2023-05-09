@@ -47,7 +47,7 @@
             <select name="teacherName" id="selectTeacher" class="input1 select1 <%= locals.errors && errors.teacherName ? 'isInvalid' : null %>">
                 <option value="default" selected>--Seleccione un profesor--</option>
                 <% teachers.forEach(teacher => { %>
-                    <option value="<%= teacher.id %>" <%= locals.oldData && oldData.teacherName == teacher.id ? 'selected' : null %>><%= teacher.last_name + ', ' + teacher.first_name %></option>
+                    <option value="<%= teacher.id %>" <%= locals.oldData && oldData.teacherName == teacher.id ? 'selected' : null %>><%= teacher.last_name + ', ' + teacher.first_name + ' (' + teacher.user_email + ')' %></option>
                 <% }) %>
             </select>
             <div class="divError1">
