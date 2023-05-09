@@ -53,12 +53,5 @@ app.use('/simulators',simulatorsRoutes)
 
 //console.log(bcrypt.hashSync('',10))
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'your.email@gmail.com',
-      pass: 'your-password'
-    }
-  });
 
 

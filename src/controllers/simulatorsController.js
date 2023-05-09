@@ -101,7 +101,7 @@ const simulatorsController = {
           nest:true,
           include:[{all:true}]
         })
-        return res.render('simulators/allExercises',{title:'Ejercisio',exercises})
+        return res.render('simulators/allExercises',{title:'Ejercicio',exercises})
       }catch(error){
         return res.send('Error')
       }

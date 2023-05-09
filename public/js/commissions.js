@@ -15,36 +15,38 @@ window.addEventListener('load',async()=>{
         const angleLeft = document.getElementById('angleLeft' + userExercises[i].id)
         const divRefs = document.getElementById('divRefs' + userExercises[i].id)
         
-        commissionExercise.addEventListener("click",async(e)=>{
+        if(commissionExercise != null){
+            commissionExercise.addEventListener("click",async(e)=>{
 
-            divDetailExercises.style.display = 'none'
-            divStepComments.style.display = 'none'
-            
-            for (let j = 0; j < userExercises.length; j++) {
-                const exercise = document.getElementById('exercise' + userExercises[j].id)
-                const steps = document.getElementById('table' + userExercises[j].id)
-                const angleRight2 = document.getElementById('angleRight' + userExercises[j].id)
-                const angleLeft2 = document.getElementById('angleLeft' + userExercises[j].id)
-                const divRefs2 = document.getElementById('divRefs' + userExercises[j].id)
-                if(exercise != null && exercise != commissionExercise){
-                    exercise.classList.remove('exerciseSelected')
-                    steps.classList.add('table2')
-                    divRefs2.classList.add('div9')
-                    angleRight2.classList.remove('angle1Display')
-                    angleLeft2.classList.add('angle1Display')
+                divDetailExercises.style.display = 'none'
+                divStepComments.style.display = 'none'
+                
+                for (let j = 0; j < userExercises.length; j++) {
+                    const exercise = document.getElementById('exercise' + userExercises[j].id)
+                    const steps = document.getElementById('table' + userExercises[j].id)
+                    const angleRight2 = document.getElementById('angleRight' + userExercises[j].id)
+                    const angleLeft2 = document.getElementById('angleLeft' + userExercises[j].id)
+                    const divRefs2 = document.getElementById('divRefs' + userExercises[j].id)
+                    if(exercise != null && exercise != commissionExercise){
+                        exercise.classList.remove('exerciseSelected')
+                        steps.classList.add('table2')
+                        divRefs2.classList.add('div9')
+                        angleRight2.classList.remove('angle1Display')
+                        angleLeft2.classList.add('angle1Display')
+                    }
                 }
-            }
-            commissionExercise.classList.toggle('exerciseSelected')
-            commissionSteps.classList.toggle('table2')
-            angleRight.classList.toggle('angle1Display')
-            angleLeft.classList.toggle('angle1Display')
-            divRefs.classList.toggle('div9')
-        })
+                commissionExercise.classList.toggle('exerciseSelected')
+                commissionSteps.classList.toggle('table2')
+                angleRight.classList.toggle('angle1Display')
+                angleLeft.classList.toggle('angle1Display')
+                divRefs.classList.toggle('div9')
+            })
+        }
     }
 
     for (let i = 0; i < userExercises.length; i++) {
+        
         for (let j = 0; j < commissionStudents.length; j++) {
-
             //event listeners to steps comments
             const studentAnswers = await (await fetch(dominio + '/apis/exercise-answers/' + userExercises[i].id + '/' + commissionStudents[j].id_students)).json()
             
@@ -87,7 +89,7 @@ window.addEventListener('load',async()=>{
                     divDetailExercises.innerHTML ='<div class="div13" id="closeStudentData">x</div>'
                     divDetailExercises.innerHTML += '<div class="div14"> <b>Alumno: </b> '+
                     commissionStudents[j].commission_user.last_name +', '+ commissionStudents[j].commission_user.first_name + '</div>'
-                    divDetailExercises.innerHTML += '<div class="div15"><b>Ejercicio: </b>'+userExercises[i].exercise_name+'</div>'
+                    divDetailExercises.innerHTML += '<div class="div15"><b>Ejercicio: </b>'+ userExercises[i].exercise_name +'</div>'
 
                     var steps =''
                     for (let k = 0; k < exerciseSteps.length; k++) {

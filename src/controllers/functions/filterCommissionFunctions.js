@@ -19,7 +19,7 @@ const filterCommissionFunctions = {
         try{
             const simulators = await db.Courses_simulators.findAll({
                 where:{id_courses:idCourses},
-                attributes:['id'],
+                attributes:[['id_simulators','id']],
                 nest:true,
                 raw:true,
                 include: [{association: 'course_simulator'}]

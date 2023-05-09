@@ -101,13 +101,24 @@ const apisController = {
 
             //get exercises
             if(req.session.userLogged.id_user_categories == 4){
+                //get exercise
                 exercises = await db.Exercises_results.findAll({
                     attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_exercises')), 'id']],
                     where:{id_users: req.session.userLogged.id}
                 })
+                //add exercise_name
+                for (let i = 0; i < exercises.length; i++) {
+                    const exerciseName = await db.Exercises.findOne({
+                        where:{id_exercises:exercises[i].id},
+                        raw:true
+                    })
+                    exercises[i].exercise_name = exerciseName
+                }
+                
+                
             }else{
                 exercises = await db.Exercises.findAll({
-                    attributes:['id'],
+                    attributes:['id','exercise_name'],
                     where:{id_simulators: idsSimulators},
                     raw:true
                 })

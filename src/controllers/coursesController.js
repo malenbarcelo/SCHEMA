@@ -134,26 +134,23 @@ const coursesController = {
             
             var courses = []
             var teachers = []
+            var company = ''
                         
             //if user logged is an administrator
             if(req.session.userLogged.id_user_categories == 1 && req.body.selectCompany != 'default'){
-
-                const companyId =  await db.Companies.findOne({
+                company =  await db.Companies.findOne({
                     where:{company_name:req.body.selectCompany},
                     raw:true
                 })
-
                 courses = await db.Courses.findAll({where:{
-                    id_companies:companyId.id,
+                    id_companies:company.id,
                 }})
-                
                 teachers = await db.Users.findAll({where:{
-                    id_companies:companyId.id,
+                    id_companies:company.id,
                     id_user_categories:3
                 }})
                 
             }else{
-
                 courses = await db.Courses.findAll({where:{id_companies:req.session.userLogged.id_companies}})
             
                 teachers = await db.Users.findAll({where:{
@@ -179,7 +176,7 @@ const coursesController = {
             //get course data
             var idCompany = ''
             if (req.session.userLogged.id_user_categories == 1) {
-                idCompany = 3
+                idCompany = company.id
             }else{
                 idCompany = req.session.userLogged.id_companies
             }
@@ -376,7 +373,6 @@ const coursesController = {
             var commissions = []
             var courses = []
 
-
             //if user logged is an administrator, get company courses and commissions
             if (req.session.userLogged.id_user_categories == 2) {
                 const companyCourses = await db.Courses.findAll({
@@ -485,6 +481,7 @@ const coursesController = {
             //get simulators and add to data.
             //get also an array with simulators ids
             const simulators = await functions.commissionSimulators(commission.id_courses)
+            
             simulators.forEach(simulator => {
                 data.push({'simulatorId': simulator.id,'simulatorName': simulator.course_simulator.simulator_name})
                 idSimulators.push(simulator.id)
