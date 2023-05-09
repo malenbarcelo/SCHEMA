@@ -6,7 +6,7 @@ const { clearScreenDown } = require('readline');
 //Change dominio.js from 'http://localhost:3000' to 'https://malenbarcelo.wnpower.host'
 const dominio = path.resolve('./public/js/dominio.js')
 const devDominioFile = fs.readFileSync(dominio, 'utf-8')
-const prdDominioFile = devDominioFile.replaceAll('https://malenbarcelo.wnpower.host','http://localhost:3000')
+const prdDominioFile = devDominioFile.replaceAll('https://campus.schemasim.com/','http://localhost:3000')
 fs.writeFileSync(dominio,prdDominioFile)
 
 //Change config.js from DEV database to PRD database

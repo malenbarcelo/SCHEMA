@@ -13,6 +13,7 @@ router.post('/create',admMiddleware,simulatorsFormsValidations.createSimulatorFo
 router.get('/create-exercise',admMiddleware,simulatorsController.createExercise)
 router.post('/create-exercise',admMiddleware,simulatorsFormsValidations.createExerciseForm,simulatorsController.storeExercise)
 router.get('/simulators-data',admMiddleware,simulatorsController.simulatorsData)
+router.get('/exercises-data',admMiddleware,simulatorsController.exercisesData)
 
 module.exports = router
 

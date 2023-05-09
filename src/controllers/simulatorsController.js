@@ -88,12 +88,24 @@ const simulatorsController = {
           order:[['simulator_name',"ASC"]],
           raw:true
         })
-
         return res.render('simulators/allSimulators',{title:'Simuladores',simulators})
       }catch(error){
         return res.send('Error')
       }
-    },     
+    },
+    exercisesData: async(req,res) => {
+      try{
+        const exercises = await db.Exercises.findAll({
+         order:[['exercise_name',"ASC"]],
+          raw:true,
+          nest:true,
+          include:[{all:true}]
+        })
+        return res.render('simulators/allExercises',{title:'Ejercisio',exercises})
+      }catch(error){
+        return res.send('Error')
+      }
+    },          
 }
 module.exports = simulatorsController
 
