@@ -33,7 +33,11 @@ a{
     padding: 2px 5px;
 }
 
-.button1:hover,.button2:hover{
+.button3{
+    width: 90px
+}
+
+.button1:hover,.button2:hover,.button3:hover{
     background-color: #082157;;
     cursor: pointer;
 }

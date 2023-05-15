@@ -131,7 +131,9 @@ const usersController = {
             })
         
             delete userToLogin.password
+
             req.session.userLogged = userToLogin
+            
             if (userToLogin.id_user_categories == 1) {
                 return res.redirect('/tokens/generate')
             }else{
@@ -158,6 +160,35 @@ const usersController = {
                 return res.status(200).json(users)
             }
             return res.status(200).json("Undefined user")
+        }catch(error){
+            return res.send('Ha ocurrido un error')
+        }
+    },
+    restorePassword: (req,res) => {
+        return res.render('users/restorePassword',{title:'Restablecer contraseña'})        
+    },
+    processRestorePassword: async(req,res) =>{
+        try{
+            const resultValidation = validationResult(req)
+            if (resultValidation.errors.length > 0){
+                return res.render('users/restorePassword',{
+                    errors:resultValidation.mapped(),
+                    oldData: req.body,
+                    title:'Restablecer contraseña'
+                })
+            }
+
+            const newPassword = bcrypt.hashSync(req.body.email,10)
+
+            await db.Users.update(
+                { password: newPassword },
+                { where: { user_email: req.body.email } }
+              )
+
+            const successMessage = true
+
+            return res.render('users/restorePassword',{title:'Restablecer contraseña',successMessage})
+
         }catch(error){
             return res.send('Ha ocurrido un error')
         }

@@ -41,6 +41,14 @@
                     <a class = "a2SideNavBar" href="/simulators/exercises-data">Ejercicios</a>
                 <% } %>
             </div>
+            <div class="divMenu">
+                <% if (locals.isLogged && (userLogged.id_user_categories == 1)) { %>
+                    <div class = "a1SideNavBar">USUARIOS</div>
+                <% } %>
+                <% if (locals.isLogged && userLogged.id_user_categories == 1) { %>
+                    <a class = "a2SideNavBar" href="/users/restore-password">Restablecer contraseña</a>
+                <% } %>
+            </div>
         </div>
         
 </div>

@@ -70,6 +70,19 @@ const userFormsValidations = {
                 }
                 return true
             }),
+    ],
+    restorePswFormValidations: [
+        body('email')
+            .notEmpty().withMessage('Ingrese un usuario')
+            .custom(async(value,{ req }) => {
+                const user =  await db.Users.findOne({
+                    where:{user_email: req.body.email}
+                })
+                if (!user) {
+                throw new Error('El usuario ingresado no existe')
+                }
+                return true
+            })
     ]
 }
 

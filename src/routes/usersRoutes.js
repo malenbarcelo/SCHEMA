@@ -14,5 +14,7 @@ router.get('/create-company',admMiddleware,usersController.createCompany)
 router.post('/create-company',admMiddleware,userFormsValidations.createCompanyFormValidations,usersController.processCreateCompany)
 router.get('/change-password',usersController.changePassword)
 router.post('/change-password',userFormsValidations.changePswFormValidations,usersController.processChangePassword)
+router.get('/restore-password',admMiddleware,usersController.restorePassword)
+router.post('/restore-password',admMiddleware,userFormsValidations.restorePswFormValidations,usersController.processRestorePassword)
 
 module.exports = router
