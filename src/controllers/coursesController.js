@@ -212,6 +212,32 @@ const coursesController = {
                 enabled:1
             })
 
+            //get commission id
+            const idCommission = await db.Course_commissions.findOne({
+                where:{commission:commission},
+                raw:true
+            })
+
+            //add teachers to commission
+            await db.Course_commissions_teachers.create({
+                id_course_commissions: idCommission.id,
+                id_teachers:parseInt(req.body.teacherName)
+            })
+
+            if (req.body.teacherName2 != 'default') {
+                await db.Course_commissions_teachers.create({
+                    id_course_commissions: idCommission.id,
+                    id_teachers:parseInt(req.body.teacherName2)
+                })
+            }
+
+            if (req.body.teacherName3 != 'default') {
+                await db.Course_commissions_teachers.create({
+                    id_course_commissions: idCommission.id,
+                    id_teachers:parseInt(req.body.teacherName3)
+                })
+            }
+
             const successMessage1 = true
 
             return res.render('courses/createCommission',{
@@ -224,6 +250,7 @@ const coursesController = {
             })
             
         }catch(error){
+            console.log(error)
             return res.send('Ha ocurrido un error')
         }
     },
@@ -399,17 +426,31 @@ const coursesController = {
             //if user logged is a teacher, get teacher courses and commissions
             if (req.session.userLogged.id_user_categories == 3) {
 
-                const teacherCommissions = await db.Course_commissions.findAll({
+                const teacherCommissions = await db.Course_commissions_teachers.findAll({
+                    where:{id_teachers:req.session.userLogged.id},
+                    raw:true,
+                    nest:true,
+                    include:[{association:'commission_data'}]
+                })                
+
+                /*const teacherCommissions = await db.Course_commissions.findAll({
                     where:{id_teachers:req.session.userLogged.id},
                     raw:true,
                     nest:true,
                     include:[{association:'course_commission_course'}]
-                })
+                })*/
 
                 var teacherCourses = []
-                teacherCommissions.forEach(teacherCommission => {
-                    teacherCourses.push({'id_courses':teacherCommission.id_courses,'course_name':teacherCommission.course_commission_course.course_name})
-                })
+
+                for (let i = 0; i < teacherCommissions.length; i++) {
+                    const course = await db.Courses.findOne({
+                        where:{id:teacherCommissions[i].commission_data.id_courses},
+                        raw:true
+                    })
+
+                    teacherCourses.push({'id_courses':teacherCommissions[i].commission_data.id_courses,'course_name':course.course_name})
+                    
+                }
 
                 //remove duplicates
                 teacherCourses = teacherCourses.filter(function({id_courses}) {
@@ -463,6 +504,7 @@ const coursesController = {
             return res.render('courses/myCourses',{title:'Mis Cursos',commissions,courses,date})
 
         }catch(error){
+            console.log(error)
             return res.send('Ha ocurrido un error')
         }
     },

@@ -52,3 +52,13 @@
         </div>
         
 </div>
+
+<!---script to close session when closing window--->
+<script>
+    window.addEventListener('beforeunload', function(event) {
+      fetch('/logout', {
+        method: 'GET', 
+        credentials: 'include', 
+      })
+    })
+</script>

@@ -43,6 +43,7 @@
                 <% } %>
             </div>
         </div>
+        <h1 class="title2">Profesores de la comisión</h1>
         <div>
             <select name="teacherName" id="selectTeacher" class="input1 select1 <%= locals.errors && errors.teacherName ? 'isInvalid' : null %>">
                 <option value="default" selected>--Seleccione un profesor--</option>
@@ -56,6 +57,25 @@
                 <% } %>
             </div>
         </div>
+        <div>
+            <select name="teacherName2" id="selectTeacher2" class="input1 select1">
+                <option value="default" selected>--Seleccione un profesor--</option>
+                <% teachers.forEach(teacher => { %>
+                    <option value="<%= teacher.id %>" <%= locals.oldData && oldData.teacherName2 == teacher.id ? 'selected' : null %>><%= teacher.last_name + ', ' + teacher.first_name + ' (' + teacher.user_email + ')' %></option>
+                <% }) %>
+            </select>
+            <div class="divError1"></div>            
+        </div>
+        <div>
+            <select name="teacherName3" id="selectTeacher3" class="input1 select1">
+                <option value="default" selected>--Seleccione un profesor--</option>
+                <% teachers.forEach(teacher => { %>
+                    <option value="<%= teacher.id %>" <%= locals.oldData && oldData.teacherName3 == teacher.id ? 'selected' : null %>><%= teacher.last_name + ', ' + teacher.first_name + ' (' + teacher.user_email + ')' %></option>
+                <% }) %>
+            </select>
+            <div class="divError1"></div>
+        </div>
+        <h1 class="title2">Fechas</h1>
         <div class="divFlex3">
             <label for="startDateCommission" class="label1">Fecha inicio</label>
             <input type="date" name="startDateCommission" value="<%= locals.oldData && oldData.startDateCommission ? oldData.startDateCommission : null %>" class="input1 input3 <%= locals.errors && errors.startDateCommission ? 'isInvalid' : null %>">

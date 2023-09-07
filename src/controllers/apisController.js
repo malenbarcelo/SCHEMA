@@ -31,13 +31,24 @@ const apisController = {
                     nest:true,
                     raw:true})
             }
-
+            
             if(req.session.userLogged.id_user_categories == 3){
-                coursesFiltered = await db.Course_commissions.findAll({
-                    attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_courses')), 'id_courses']],
+                commissions = await db.Course_commissions_teachers.findAll({
+                    attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_course_commissions')), 'id_course_commissions']],
                     where:{id_teachers:req.session.userLogged.id},
+                    include:[{all:true}],
                     nest:true,
                     raw:true})
+
+                var coursesFiltered = []
+
+                commissions.forEach(commission => {
+                    coursesFiltered.push({'id_courses':commission.commission_data.id_courses})
+                })
+                //remove duplicates
+                coursesFiltered = coursesFiltered.filter(function({id_courses}) {
+                    return !this.has(id_courses) && this.add(id_courses)
+                    }, new Set)
             }
 
             if(req.session.userLogged.id_user_categories == 4){
@@ -63,6 +74,7 @@ const apisController = {
             return res.status(200).json(coursesFiltered)
 
         }catch(error){
+            console.log(error)
             return res.send('Ha ocurrido un error')
         }
     },
@@ -338,7 +350,7 @@ const apisController = {
             }
 
         }catch(error){
-            return res.send('Ha ocurrido un error')
+            return res.send(error)
         }
     },
     loginValidation: async(req,res) =>{

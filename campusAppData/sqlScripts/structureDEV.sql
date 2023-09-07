@@ -73,10 +73,9 @@ CREATE TABLE schema_db.courses (
 CREATE TABLE schema_db.course_commissions (
     id INT NOT NULL AUTO_INCREMENT,
     id_courses INT NOT NULL,
-    start_date  DATE NOT NULL,
-    end_date  DATE NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
     commission VARCHAR(50) NOT NULL,
-    id_teachers INT NOT NULL,
     enabled INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_courses) REFERENCES courses(id),
@@ -91,6 +90,16 @@ CREATE TABLE schema_db.course_commissions_students (
     PRIMARY KEY (id),
     FOREIGN KEY (id_course_commissions) REFERENCES course_commissions(id),
     FOREIGN KEY (id_students) REFERENCES users(id)       
+);
+
+/*Create table course_commissions_teachers*/
+CREATE TABLE schema_db.course_commissions_teachers (
+    id INT NOT NULL AUTO_INCREMENT,
+    id_course_commissions INT NOT NULL,
+    id_teachers INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_course_commissions) REFERENCES course_commissions(id),
+    FOREIGN KEY (id_teachers) REFERENCES users(id)       
 );
 
 /*Create table courses_simulators*/

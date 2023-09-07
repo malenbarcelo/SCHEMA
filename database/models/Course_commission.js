@@ -24,10 +24,6 @@ module.exports = (sequelize, DataTypes) => {
    type: DataTypes.STRING,
    allowNull: false,
    },
-   id_teachers:{
-      type: DataTypes.INTEGER,
-      allowNull: false,
-   },
    enabled:{
       type: DataTypes.INTEGER,
       allowNull: true,

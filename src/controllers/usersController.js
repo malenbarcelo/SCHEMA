@@ -5,6 +5,10 @@ const functions = require('./functions/tokensFunctions')
 
 const usersController = {
     login: (req,res) => {
+        req.session.destroy()
+        /*if (req.session.userLogged) {
+            return res.redirect('/logout')
+        }*/
         return res.render('users/login',{title:'Iniciar Sesión'})        
     },
     processLogin: async(req, res) => {

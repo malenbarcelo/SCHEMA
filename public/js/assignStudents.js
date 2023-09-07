@@ -37,7 +37,7 @@ window.addEventListener('load',async()=>{
 
                 //add administrator note
                 if(companyStudents.length == 0){
-                    noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> La institución no posee alumnos registrads para asociar a la comisión.</p>'
+                    noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> La institución no posee alumnos registrados para asociar a la comisión.</p>'
                 }else{
                     noteForAdministrator.innerHTML = '<p class="p1"><i class="fa-solid fa-triangle-exclamation"></i> Puede asignar un máximo de '+ companyStudents.length +' alumnos a cada comisión, en caso de necesitar más cupos, solicite nuevos tokens de alumnos para la institución.</p>'
                 }
