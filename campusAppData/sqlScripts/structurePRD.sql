@@ -78,8 +78,7 @@ CREATE TABLE malenbar_schema_sim.course_commissions (
     commission VARCHAR(50) NOT NULL,
     enabled INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_courses) REFERENCES courses(id),
-    FOREIGN KEY (id_teachers) REFERENCES users(id)    
+    FOREIGN KEY (id_courses) REFERENCES courses(id)
 );
 
 /*Create table course_commissions_students*/

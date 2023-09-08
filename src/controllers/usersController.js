@@ -196,7 +196,8 @@ const usersController = {
         }catch(error){
             return res.send('Ha ocurrido un error')
         }
-    },    
+    },
+        
 }
 module.exports = usersController
 
