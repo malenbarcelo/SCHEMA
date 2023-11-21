@@ -34,6 +34,7 @@ router.get('/students-assignation',admsMiddleware,coursesController.assignStuden
 router.post('/students-assignation',admsMiddleware,upload.single('fileAssignStudents'),coursesFormsValidations.assignStudentsFormValidations,coursesController.processAssignStudents)
 router.get('/my-courses',authMiddleware,coursesController.myCourses)
 router.get('/commissions/:idCommission',teacherMiddleware,coursesController.filterCommission)
+//router.get('/commissions/:idCommission',coursesController.filterCommission)
 router.get('/commissions/:idCommission/:idStudent',authMiddleware,coursesController.filterCommissionAndStudent)
 router.get('/courses-data',admMiddleware,coursesController.coursesData)
 

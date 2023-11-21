@@ -469,6 +469,10 @@ input::-webkit-inner-spin-button {
     cursor: pointer;
 }
 
+.stepNotPassed2{
+    color:red;
+}
+
 .stepPassed{
     color:green
 }
@@ -476,6 +480,16 @@ input::-webkit-inner-spin-button {
 .table1{
     margin: auto;
 }
+
+/*.tableContainer{
+    max-height: 500px; 
+    overflow-y: auto;
+}*/
+/*.thead1{
+    border: red solid 1px;
+    position: sticky;
+    top: 0;
+}*/
 
 .table2{
     display: none;

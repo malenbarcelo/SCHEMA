@@ -1,6 +1,7 @@
 const db = require('../../database/models')
 const sequelize = require('sequelize')
 const bcrypt = require('bcryptjs')
+const commissionData = require('./functions/commissionData')
 
 const apisController = {
     commissionsList: async(req,res) =>{
@@ -93,9 +94,20 @@ const apisController = {
 
             //if user Logged is a teacher
             if(req.session.userLogged.id_user_categories == 3){
+                const userCommissions = await db.Course_commissions_teachers.findAll({
+                    where:{id_teachers:req.session.userLogged.id},
+                    raw:true
+                })
+
+                const commissions = []
+
+                userCommissions.forEach(commission => {
+                    commissions.push(commission.id_course_commissions)
+                });
+
                 courses = await db.Course_commissions.findAll({
                     attributes: [[sequelize.fn('DISTINCT', sequelize.col('id_courses')), 'id']],
-                    where:{id_teachers: req.session.userLogged.id},
+                    where:{id: commissions},
                     raw:true
                 })
             }
@@ -126,11 +138,9 @@ const apisController = {
                     })
                     exercises[i].exercise_name = exerciseName
                 }
-                
-                
             }else{
                 exercises = await db.Exercises.findAll({
-                    attributes:['id','exercise_name'],
+                    attributes:['id','exercise_name','id_simulators'],
                     where:{id_simulators: idsSimulators},
                     raw:true
                 })
@@ -139,6 +149,7 @@ const apisController = {
             return res.status(200).json(exercises)
 
         }catch(error){
+            console.log(error)
             return res.send('Ha ocurrido un error')
         }
     },
@@ -324,8 +335,7 @@ const apisController = {
                     raw:true,
                     nest:true
                     })
-
-                    //store answers
+                //store answers
                 for (let i = 0; i < keys.length; i++) {
                     await db.Exercises_answers.create({
                         id_exercises_results: idExercisesResults.max,
@@ -338,6 +348,7 @@ const apisController = {
                         observations: req.body.answers[i].observations
                     })
                 }
+                
                 const postResult = {
                     'status':'Datos guardados correctamente'
                 }
@@ -426,6 +437,31 @@ const apisController = {
             return res.send('Ha ocurrido un error')
         }
     },
+    commissionData:async(req,res) =>{
+        try{
+            idCommission = req.params.idCommission
+
+            const idSimulators = await commissionData.idSimulators(idCommission)
+
+            const idStudents = await commissionData.idStudents(idCommission)
+
+            let data = await commissionData.data(idSimulators,idStudents)
+
+            //add exercises results to data
+            await commissionData.exercisesResults(data)
+
+            //add steps data to data
+            await commissionData.stepsData(data)
+
+            return res.status(200).json(data)
+
+        }catch(error){
+            console.log(error)
+            return res.send('Ha ocurrido un error')
+        }
+    },
+
+
     
 }
 module.exports = apisController

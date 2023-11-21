@@ -3,7 +3,10 @@ const sequelize = require('sequelize');
 const readXlsFile = require('read-excel-file/node')
 const {validationResult} = require('express-validator')
 const functions = require('./functions/filterCommissionFunctions')
+const {commissionSimulatorsData} = require('./functions/commissionData')
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args))
+const commissionData = require('./functions/commissionData');
+const filterCommissionFunctions = require('./functions/filterCommissionFunctions');
 
 const coursesController = {
     createCourse: async(req,res) => {
@@ -510,235 +513,29 @@ const coursesController = {
     },
     filterCommission: async(req,res) => {
         try{
+
             const idCommission = req.params.idCommission
-            const data = []
-            const idSimulators= []
-            const studentsData = []
-            const idSimulatorsExercises = []
-            let idStudents = []
 
-            //get commission
-            const commission = await functions.commissionSelected(req.params.idCommission)
+            const commission = await filterCommissionFunctions.commissionSelected(idCommission)
 
-            //get simulators and add to data.
-            //get also an array with simulators ids
-            const simulators = await functions.commissionSimulators(commission.id_courses)
-            
-            simulators.forEach(simulator => {
-                data.push({'simulatorId': simulator.id,'simulatorName': simulator.course_simulator.simulator_name})
-                idSimulators.push(simulator.id)
-            });
+            const idSimulators = await commissionData.idSimulators(idCommission)
 
-            //find commission students
-            const students = await db.Course_commissions_students.findAll({
-                where:{id_course_commissions:commission.id},
-                nest:true,
-                raw:true,
-                include: [{association: 'commission_user'}]
-            })
+            const idStudents = await commissionData.idStudents(idCommission)
 
-            students.forEach(student => {
-                studentsData.push({'studentId':student.commission_user.id,'firstName':student.commission_user.first_name,'lastName':student.commission_user.last_name})
-            });
+            let data = await commissionData.data(idSimulators,idStudents)
 
-            //order students by lastName
-            studentsData.sort((a,b)=> (a.lastName < b.lastName ? -1 : 1))
+            //add exercises results to data
+            await commissionData.exercisesResults(data)
 
-            //get an array with id_students
-            studentsData.forEach(student => {
-                idStudents.push(student.studentId)
-            });
-
-            //find simulator exercises
-            const simulatorsExercises = await db.Exercises.findAll({
-                where:{id_simulators:idSimulators},
-                nest:true,
-                raw:true
-            })
-            simulatorsExercises.forEach(simulatorExercise => {
-                idSimulatorsExercises.push(simulatorExercise.id)
-            });
-
-            //find exercises that corresponds to a simulator and have been donde by one commission student at least
-            const allCommissionExercises = await db.Exercises_results.findAll({
-                attributes:['id_exercises'],
-                where:{id_exercises:idSimulatorsExercises, id_users:idStudents},
-                nest:true,
-                raw:true,
-                order:[['id_exercises','ASC']]
-            })
-
-            //remove duplicates
-            let commissionExercises = allCommissionExercises.filter(function({id_exercises}) {
-                return !this.has(id_exercises) && this.add(id_exercises)
-                }, new Set)
-
-            //find commission exercises steps
-            const allCommissionExercisesResults = await db.Exercises_results.findAll({
-                attributes:['id','id_exercises'],
-                where:{id_exercises:idSimulatorsExercises, id_users:idStudents},
-                nest:true,
-                raw:true,
-                order:[['id_exercises','ASC'],['id','ASC']]
-            })
-
-            for (let i = 0; i < commissionExercises.length; i++) {
-                const idExercisesResults = []
-                for (let j = 0; j < allCommissionExercisesResults.length; j++) {
-                    if(allCommissionExercisesResults[j].id_exercises == commissionExercises[i].id_exercises){
-                        idExercisesResults.push(allCommissionExercisesResults[j].id)
-                    }
-                }
-                const allExercisesAnswers = await db.Exercises_answers.findAll({
-                    attributes:['description'],
-                    where:{id_exercises_results:idExercisesResults},
-                    nest:true,
-                    raw:true
-                })
-
-                //remove duplicates
-                let exercisesAnswers = allExercisesAnswers.filter(function({description}) {
-                    return !this.has(description) && this.add(description)
-                    }, new Set)
-
-                //separate code from description
-                exercisesAnswers.forEach(exerciseAnswer => {
-                    const array = exerciseAnswer.description.split('_')
-                    exerciseAnswer.code=array[0]
-                    exerciseAnswer.descriptionResumed=array[1]
-                })
-
-                //order by code
-                exercisesAnswers.sort((a,b)=> (a.code < b.code ? -1 : 1))
-                commissionExercises[i].steps = exercisesAnswers
-            }
-
-            //add simulator exercises and students results to data
-            for (let i = 0; i < data.length; i++) {
-                const exercisesData = []
-                const studentsResults = []
-                const exercises = await db.Exercises.findAll({
-                    attributes:['id','exercise_name'],
-                    where:{id_simulators:data[i].simulatorId},
-                    order: [['id', 'ASC']],
-                    nest:true,
-                    raw:true
-                })
-
-                for (let j = 0; j < exercises.length; j++) {
-                    //get id exercises results
-                    const idExercisesResults = await db.Exercises_results.findAll({
-                        attributes:['id'],
-                        where:{id_exercises:exercises[j].id,id_users:idStudents},
-                        order: [['id', 'ASC']],
-                        nest:true,
-                        raw:true
-                    })
-
-                    const arrayIdExercisesResults = []
-
-                    idExercisesResults.forEach(idExerciseResult => {
-                        arrayIdExercisesResults.push(idExerciseResult.id)
-                    });
-
-                    //get steps
-                    const allExercisesSteps = await db.Exercises_answers.findAll({
-                        attributes:['description'],
-                        where:{id_exercises_results:arrayIdExercisesResults},
-                        nest:true,
-                        raw:true
-                    })
-
-                    //remove duplicates
-                    let exercisesSteps = allExercisesSteps.filter(function({description}) {
-                        return !this.has(description) && this.add(description)
-                        }, new Set)
-
-                    //separate code from description
-                    exercisesSteps.forEach(exerciseStep => {
-                        const array = exerciseStep.description.split('_')
-                        exerciseStep.code=array[0]
-                        exerciseStep.description=array[1]
-                    })
-
-                    //order by code
-                    exercisesSteps.sort((a,b)=> (a.code < b.code ? -1 : 1))
-
-                    //add info to exercises data
-                    exercisesData.push({'exerciseId':exercises[j].id,'exerciseName':exercises[j].exercise_name,'exercisesSteps':exercisesSteps})
-                }
-
-                for (let k = 0; k < studentsData.length; k++) {
-                    studentsResults.push({'studentId':studentsData[k].studentId,'firstName':studentsData[k].firstName,'lastName':studentsData[k].lastName,'exercisesResults':[]})
-                    for (let l = 0; l < exercises.length; l++) {
-
-                        const userId = await db.Exercises_results.findOne({
-                            where:{id_users:studentsData[k].studentId,id_exercises:exercises[l].id},
-                            nest:true,
-                            raw:true
-                        })
-                        if(userId){
-                            const lastDate = await db.Exercises_results.findOne({
-                                attributes: [[sequelize.fn("max", sequelize.col("date")), "date"]],
-                                where:{id_users: studentsData[k].studentId,id_exercises:exercises[l].id},
-                                nest:true,
-                                raw:true
-                            })
-                            const exerciseResult = await db.Exercises_results.findOne({
-                                where: {id_users: studentsData[k].studentId,id_exercises:exercises[l].id,date:parseInt(lastDate.date)},
-                                nest:true,
-                                raw:true
-                            })
-
-                            const stepsResults = await db.Exercises_answers.findAll({
-                                where:{id_exercises_results:exerciseResult.id},
-                                nest:true,
-                                raw:true
-                            })
-
-                            //make sure that all steps are completed
-                            let commissionExercisesFiltered = commissionExercises.filter(exercise => exercise.id_exercises == exercises[l].id)
-                            commissionExercisesFiltered = commissionExercisesFiltered[0].steps
-
-                            const fullStepsResults = []
-
-                            for (let s = 0; s < commissionExercisesFiltered.length; s++) {
-                                let result = stepsResults.filter(stepResult => stepResult.description == commissionExercisesFiltered[s].description)
-                                if(result != ''){
-                                    result[0].passed = result[0].type == 'Error' ? 'no' : 'si'
-                                    fullStepsResults.push(result[0])
-
-                                }else{
-                                    fullStepsResults.push({'id':'-','id_exercises_results':'-','description':commissionExercisesFiltered[s].description,'log_time':'-','type':'-','obserations':'-','passed':'-'})
-                                }
-                            }
-
-                            studentsResults[k].exercisesResults.push({'exerciseId':exercises[l].id,'date':lastDate.date,'grade':exerciseResult.grade,'durationSecs':exerciseResult.duration_secs,'idExercisesResults':exerciseResult.id,'exercisesSteps':fullStepsResults})
-
-                        }else{
-                            const fullStepsResults = []
-                            const exercise = exercisesData.filter(exercise => exercise.exerciseId == exercises[l].id)
-                            const exerciseSteps = exercise[0].exercisesSteps
-
-                            exerciseSteps.forEach(exerciseStep => {
-                                fullStepsResults.push({'id':'-','id_exercises_results':'-','description':exerciseStep.description,'log_time':'-','type':'-','obserations':'-','passed':'-'})
-                            })
-
-                            //exercises[l].id
-                            studentsResults[k].exercisesResults.push({'exerciseId':exercises[l].id,'date':'-','grade':'-','durationSecs':'-','idExercisesResults':'-','exercisesSteps':fullStepsResults})
-
-                        }
-                    }
-                }
-                data[i].simulatorExercises = exercisesData
-                data[i].studentsResults = studentsResults
-            }
+            //add steps data to data
+            await commissionData.stepsData(data)
 
             //return res.send(data)
 
-
         return res.render('courses/commissions',{title:'Comisiones',data,commission})
+
     }catch(error){
+        console.log(error)
         return res.send('Ha ocurrido un error')
     }
 },
@@ -907,9 +704,6 @@ const coursesController = {
                                 allSteps[l].log_time = '-'
                                 allSteps[l].observations = '-'
                                 allSteps[l].id = '-'
-                                
-                                
-                                
                             }else{
                                 allSteps[l].type = stepData[0].type
                                 allSteps[l].log_time = stepData[0].log_time
@@ -924,9 +718,8 @@ const coursesController = {
                     }
                 }
             }
-            
-            //return res.send(data)
 
+            
             return res.render('courses/studentCommissions',{title:'Comisiones',course,data})
         }catch(error){
             return res.send('Ha ocurrido un error')

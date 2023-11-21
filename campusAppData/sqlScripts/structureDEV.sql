@@ -147,7 +147,7 @@ CREATE TABLE schema_db.exercises_answers (
     description VARCHAR(100) NOT NULL,
     log_time INT NOT NULL,
     type VARCHAR(100) NOT NULL,
-    observations VARCHAR(500),
+    observations VARCHAR(5000),
     PRIMARY KEY (id),
     FOREIGN KEY (id_exercises_results) REFERENCES exercises_results(id),
     FOREIGN KEY (id_exercises) REFERENCES exercises(id),

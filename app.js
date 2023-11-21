@@ -51,7 +51,7 @@ app.use('/courses',coursesRoutes)
 app.use('/apis',apisRoutes)
 app.use('/simulators',simulatorsRoutes)
 
-//console.log(bcrypt.hashSync('',10))
+//console.log(bcrypt.hashSync('dbernal@novaoil.mx',10))
 
 
 

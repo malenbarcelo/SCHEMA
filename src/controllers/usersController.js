@@ -36,8 +36,11 @@ const usersController = {
                 nest:true,
                 raw:true
             })
+
             delete userToLogin.password
+
             req.session.userLogged = userToLogin
+            
             if (userToLogin.id_user_categories == 1) {
                 return res.redirect('/tokens/generate')
             }

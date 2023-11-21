@@ -1,104 +1,180 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
-<%- include('../partials/userLogged') %>
 
+<body class="commissionsBody">
 
-<div class="div22">
-    <h1 class="title1"><%= commission.course_commission_course.course_name %></h1>
-<h1 class="title2 title3">Comisión <%= commission.commission %></h1>
-<div class="div12" id="commissionId"><%= commission.id %></div>
+    <div class="divCommissions">
 
-<% for( let i = 0; i < data.length; i++ ) { %>
-    <div class="div23">
-        <h1 class="title2 title6"><%= data[i].simulatorName %></h1>
+        <%- include('../partials/userLogged') %>
+
+        <h1 class="title1"><%= commission.course_commission_course.course_name %></h1>
+        <h1 class="title2 title3">Comisión <%= commission.commission %></h1>
+        <div class="notVisible" id="commissionId"><%= commission.id %></div>
+
     </div>
-        <div class="div21">
-            <p class="p6"><b>Ejercicios:</b></p>
-            <% for( let o = 0; o < data[i].simulatorExercises.length; o++ ) { %>
-                <p class="p6"><%= (o + 1) + ': ' + data[i].simulatorExercises[o].exerciseName %></p>
+
+    <% for( let i = 0; i < data.length; i++ ) { %>
+        
+        <div class="divSimulator">
+            <%= 'Simulador: ' + data[i].simulator_name %>
+        </div>
+
+        <div class="divExercAndStepsData">
+            <div class="divExercises">
+                <div class="divExTitle"><b>Ejercicios del simulador:</div></b>
+    
+                <% for( let j = 0; j < data[i].exercises.length; j++ ) { %>
+                    <div class="divExData"><%= (j + 1) + ': ' + data[i].exercises[j].exercise_name %></div>
+                <% } %>
+
+            </div>
+    
+            <div class="divSteps notVisible" id="<%= 'divSteps_' + data[i].id %>" ></div>
+        </div>
+
+        <div>
+            <% if (data[i].studentsResults.length == 0 ) { %>
+                <div class="divAlert">
+                    <i class="fa-solid fa-triangle-exclamation"></i>  &nbsp No se registran datos para el simulador "<%= data[i].simulator_name  %>"
+                </div>
+                <% } else { %>
+
+                    <div class="divTable">
+                        <table class="tableCommissions">
+
+                            <thead class="thCommissions">
+                                
+                                <tr>
+                                    <th class="thCom1" rowspan="2">Alumno</th>
+                                    <th class="thCom1" colspan=<%= data[i].exercises.length %>>Ejercicios</th>
+                                    
+                                    <!---Add exercises steps to the table-->
+                                    <% for( let j = 0; j < data[i].exercises.length; j++ ) { %>
+                                        <th class="thCom1 thCom3 notVisible <%= 'stepsData_' + data[i].id + data[i].exercises[j].id %>" colspan=<%= data[i].exercises[j].steps.length + 1 %>>
+
+                                            <%= 'Pasos Ej. ' + (j + 1)  %>
+
+                                        </th>
+                                    <% } %>
+                                </tr>
+
+                                <tr>
+                                    <% for( let j = 0; j < data[i].exercises.length; j++ ) { %>
+                                        <th class="thCom1 thCom2" id="<%= 'th_' + data[i].id + data[i].exercises[j].id %>">
+
+                                            <%= (j+1) + ' ' %>
+
+                                            <i class="fa-solid fa-angle-right" id=<%= 'angleRight' + data[i].id + data[i].exercises[j].id %>></i>
+                                            
+                                            </i><i class="fa-solid fa-angle-left notVisible" id=<%= 'angleLeft' + data[i].id + data[i].exercises[j].id %>></i>&nbsp
+                                        </th>
+
+                                    <% } %>
+    
+                                    <% for( let j = 0; j < data[i].exercises.length; j++ ) { %>
+                                        
+                                        <th class="thCom1 thCom3 notVisible <%= 'stepsData_' + data[i].id + data[i].exercises[j].id %>">
+                                            Tiempo
+                                        </th>
+
+                                        <% for( let jj = 0; jj < data[i].exercises[j].steps.length; jj++ ) { %>
+                                            <th class="thCom1 thCom3 notVisible <%= 'stepsData_' + data[i].id + data[i].exercises[j].id %>">
+                                                <%= (jj + 1)  %>
+                                            </th>
+                                        <% } %>
+
+                                    <% } %>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                    <% for( let k = 0; k < data[i].studentsResults.length; k++ ) { %>
+
+                                        <tr>
+
+                                            <td class="tdCom1">
+                                                <%= data[i].studentsResults[k].last_name + ', ' + data[i].studentsResults[k].first_name %>
+                                            </td>
+
+                                            <% for( let kk = 0; kk < data[i].exercises.length; kk++ ) { %>
+                                                <td class="tdCom1 tdCom2">
+                                                    <% if ((data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id)).length != 0) { %>
+                                                        
+                                                        <%= data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id)[0].grade %>
+
+                                                        &nbsp
+                                                        
+                                                        <span class="plusCom" id=<%= 'plusCom_' + data[i].id + '_' + data[i].studentsResults[k].id + '_' + data[i].exercises[kk].id %>> + </span>
+                                                        
+                                                        <% } else { %>
+                                                            -
+                                                    <% } %>
+                                                </td>
+                                            <% } %>
+
+                                            <% for( let kk = 0; kk < data[i].exercises.length; kk++ ) { %>
+                                                <td class="tdCom3 notVisible <%= 'stepsData_' + data[i].id + data[i].exercises[kk].id %>">
+                                                    <% if ((data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id)).length != 0) { %>
+                                                        
+                                                        <%= data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id)[0].duration_secs %>
+
+                                                        <% } else { %>
+                                                            -
+                                                    <% } %>
+                                                </td>
+
+                                                <% for( let kkk = 0; kkk < data[i].exercises[kk].steps.length; kkk++ ) { %>
+                                                    <td class="tdCom3 notVisible <%= 'stepsData_' + data[i].id + data[i].exercises[kk].id %>">
+
+                                                        <% if (data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id).length != 0 ) { %>
+
+                                                            <% if (data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id)[0].stepsData.filter(step => step.description == data[i].exercises[kk].steps[kkk].description).length != 0) { %>
+
+                                                                <% if (data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id)[0].stepsData.filter(step => step.description == data[i].exercises[kk].steps[kkk].description)[0].type == 'Error') { %>
+                                                                    <i class="fa-solid fa-xmark stepNotPassed" id="<%= 'x_' + data[i].id + '_' + data[i].studentsResults[k].id + '_' + data[i].exercises[kk].steps[kkk].description %>"></i>
+
+                                                                    <% } else { %>
+                                                                        <i class="fa-solid fa-check stepPassed">
+                                                                <% } %>
+
+                                                                
+
+                                                                <% } else { %>
+                                                                    -                                                             
+                                                            <% } %>
+
+                                                            <% } else { %>
+                                                                -                                                         
+                                                        <% } %>
+
+                                                    </td>
+                                                    
+                                                <% } %>
+                                            <% } %>
+
+                                        </tr>
+                                    <% } %>
+                            </tbody>
+
+                        </table>
+                    </div>
             <% } %>
         </div>
-        <div class="divFlex8">
-        <% if (data[i].studentsResults.length == 0) { %>
-            <p class="p4"><i class="fa-solid fa-triangle-exclamation"></i>  &nbsp No se registran datos para el simulador "<%= data[i].simulatorName  %>"</p>
-            <% } else { %>
-                <div class="divFlex5">
-                    <div class="div11">
-                        <table class="table1">
-                            <tr>
-                                <th class="tableTitle1" rowspan="2">Alumno</th>
-                                <th class="tableTitle1" colspan=<%= data[i].simulatorExercises.length %>>Ejercicios</th>
-                            </tr>
-                            <tr class="tr1">
-                                <% for( let j = 0; j < data[i].simulatorExercises.length; j++ ) { %>
-                                    <th class="tableTitle1 tableTitle3" id = <%= 'exercise' + data[i].simulatorExercises[j].exerciseId %>><%= (j+1) +' '%><i class="fa-solid fa-angle-right" id=<%= 'angleRight' + data[i].simulatorExercises[j].exerciseId %>></i></i><i class="fa-solid fa-angle-left angle1Display" id=<%= 'angleLeft' + data[i].simulatorExercises[j].exerciseId %>></i>&nbsp</th>
-                                <% } %>
-                            </tr>
-                            <% for( let k = 0; k < data[i].studentsResults.length; k++ ) { %>
-                                <tr>
-                                    <td class="td1"><%= data[i].studentsResults[k].lastName + ', ' + data[i].studentsResults[k].firstName %></td>
-                                    <% for( let l = 0; l < data[i].studentsResults[k].exercisesResults.length; l++ ) { %>
-                                        <td class="td1 td2">
-                                            <%= data[i].studentsResults[k].exercisesResults[l].grade %>
-                                            <% if (data[i].studentsResults[k].exercisesResults[l].grade != '-') { %>
-                                                &nbsp<span class="plus2" id=<%= 'plusDetailExercise_' + data[i].studentsResults[k].exercisesResults[l].exerciseId + '_' + data[i].studentsResults[k].studentId %>> + </span>
-                                            <% } %>
-                                        </td>
-                                    <% } %>
-                                </tr>
-                            <% } %>
-                        </table>
-                        <div class="div10" id="divDetailExercises"></div>
-                        <div class="div20" id="divStepComments"></div>
-                    </div>
-        
-                    <% for( let z = 0; z < data[i].simulatorExercises.length; z++ ) { %>
-                        <table class = "table2" id=<%= 'table' + data[i].simulatorExercises[z].exerciseId %>>
-                            <tr>
-                                <th class="tableTitle1" colspan=<%= data[i].simulatorExercises[z].exercisesSteps.length + 1 %>>Pasos</th>
-                            </tr>
-                            
-                            <tr>
-                                <th class="tableTitle1">Tiempo</th>
-                                <% for( let w = 0; w < data[i].simulatorExercises[z].exercisesSteps.length; w++ ) { %>
-                                    <th class="tableTitle1 tableTitle2"><%= data[i].simulatorExercises[z].exercisesSteps[w].code %></th>
-                                <% } %>
-                            </tr>
-        
-                            <% for( let x = 0; x < data[i].studentsResults.length; x++ ) { %>
-                                <tr>
-                                    <td class="td1 td2"><%= data[i].studentsResults[x].exercisesResults[z].durationSecs %></td>
-                                    <% for( let s = 0; s < data[i].studentsResults[x].exercisesResults[z].exercisesSteps.length; s++ ) { %>
-                                        <td class="td1 td2">
-                                            <% if (data[i].studentsResults[x].exercisesResults[z].exercisesSteps[s].passed == 'si') { %>
-                                            <i class="fa-solid fa-check stepPassed"></i>
-                                            <% } %>
-                                            <% if (data[i].studentsResults[x].exercisesResults[z].exercisesSteps[s].passed == 'no') { %>
-                                                <i class="fa-solid fa-xmark stepNotPassed" id=<%= 'comment_' + data[i].studentsResults[x].exercisesResults[z].exercisesSteps[s].id %>></i>
-                                            <% } %>
-                                            <% if (data[i].studentsResults[x].exercisesResults[z].exercisesSteps[s].passed == '-' ) { %>
-                                                <i class="fa-solid fa-minus stepNotDone"></i>
-                                            <% } %>
-                                        </td>
-                                    <% } %>
-                                </tr>
-                            <% } %>
-                        </table>
-                    <% } %>
-                    
-                </div>
-        <% } %>
-        <% for( let j = 0; j < data[i].simulatorExercises.length; j++ ) { %>
-            <div class="div8 div9" id=<%= 'divRefs' + data[i].simulatorExercises[j].exerciseId %>>
-                <h1 class="title5"><%= data[i].simulatorExercises[j].exerciseName %> </h1>
-                <% for( let k = 0; k < data[i].simulatorExercises[j].exercisesSteps.length; k++ ) { %>
-                    <p class="p5"><%= data[i].simulatorExercises[j].exercisesSteps[k].code + ': ' + data[i].simulatorExercises[j].exercisesSteps[k].description %></p>
-                <% } %>
-            </div>
-        <% } %>
-        </div>
-<% } %>
+    
+    <% } %>
+    
+</body>
 
+<div class="divObs notVisible" id="divObs">
+    <div class="divX">
+        <div class="closeObs" id="divX">x</div>
+    </div>
+    <div class="divExTitle"><b>Observaciones:</b></div>
+    <div id="divObsDetails"></div>
+</div>
+
+<div class="divObs divObs2 notVisible" id="divExDetails">
+    
 </div>
 
 <script type="module" src="/js/commissions.js"></script>
