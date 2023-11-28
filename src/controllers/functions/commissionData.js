@@ -49,6 +49,11 @@ const commissionData = {
             attributes:['id','first_name','last_name'],
             raw:true
         })
+
+        //add exercises results
+        students.forEach(student => {
+            student.exercisesResults = ''
+        })
         
         let data = await db.Simulators.findAll({
             where:{id:idSimulators},
@@ -92,38 +97,43 @@ const commissionData = {
         return data
     },
     exercisesResults: async(data) => {
-        for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < data[i].studentsResults.length; j++) {
 
-                let exerciseResults = await db.Exercises_results.findAll({
-                    where:{
-                        id_simulators:data[i].id,
-                        id_users:data[i].studentsResults[j].id,
-                    },
-                    raw:true
-                })
-                
+        for (let i = 0; i < data.length; i++) {
+
+            let currentId = data[i].id
+            
+            let exercisesResults = await db.Exercises_results.findAll({
+                where:{
+                    id_simulators:data[i].id,
+                },
+                raw:true
+            })
+        
+            data[i].studentsResults = data[i].studentsResults.map(result => {
+
+                const filterResults = exercisesResults.filter(exercises => exercises.id_users == result.id)
+
                 //get only de last result
                 const maxDates = {}
 
-                exerciseResults.forEach(result => {
-                    const idExercises = result.id_exercises
+                filterResults.forEach(element => {
+                    const idExercises = element.id_exercises
                     const currentMaxDate = maxDates[idExercises]
                   
                     //compare and update max date
-                    if (!currentMaxDate || result.date > currentMaxDate.date) {
-                      maxDates[idExercises] = result
+                    if (!currentMaxDate || element.date > currentMaxDate.date) {
+                      maxDates[idExercises] = element
                     }
                 })
 
-                let exerciseResultsFiltered = Object.values(maxDates)
+                let filterResultsMaxDates = Object.values(maxDates)
 
-                data[i].studentsResults[j].exercisesResults = exerciseResultsFiltered
-                
-            }
-            
-        }
-    },
+                return {
+                    ...result,
+                    exercisesResults: [...result.exercisesResults, ...filterResultsMaxDates],
+                }
+            })
+        }    },
     stepsData: async(data) => {
 
         for (let i = 0; i < data.length; i++) {

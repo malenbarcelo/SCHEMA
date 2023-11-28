@@ -88,7 +88,7 @@ window.addEventListener('load',async()=>{
                             steps += '<div class="divStepsCodes"><b>' + step.code + '</b></div>'
                         })
 
-                        divExDetails.innerHTML += '<div class="divFlexExDetails"><div class="divExData"><b>Fecha</b></div><div class="divExData2"><b>Nota</b></div><div class="divExData"><b>Tiempo</b></div>' + steps + '</div>'
+                        divExDetails.innerHTML += '<div class="divFlexExDetails"><div class="divExData3"><b>Fecha</b></div><div class="divExData2"><b>Nota</b></div><div class="divExData2"><b>Tiempo</b></div>' + steps + '</div>'
 
                         for (let j = 0; j < exercisesResults.length; j++) {
                             const fullDate = new Date(parseInt(exercisesResults[j].date))
@@ -115,7 +115,7 @@ window.addEventListener('load',async()=>{
                                 
                             })
                             
-                            divExDetails.innerHTML += '<div class="divFlex9"><div class="div16">' + date + '</div><div class="div16">' + exercisesResults[j].grade + '</div><div class="div16">' + exercisesResults[j].duration_secs + '</div>' + stepsResultsHtml + '</div>'
+                            divExDetails.innerHTML += '<div class="divFlex9"><div class="divExInfo2">' + date + '</div><div class="divExInfo">' + exercisesResults[j].grade + '</div><div class="divExInfo">' + exercisesResults[j].duration_secs + '</div>' + stepsResultsHtml + '</div>'
                         }
 
                         const divX2 = document.getElementById('divX2')

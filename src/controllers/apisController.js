@@ -391,6 +391,7 @@ const apisController = {
             return res.status(200).json(user)
             
         }catch(error){
+            console.log(error)
             return res.send('Ha ocurrido un error')
         }
     },
