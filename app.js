@@ -6,6 +6,7 @@ const tokensRoutes = require('./src/routes/tokensRoutes.js')
 const coursesRoutes = require('./src/routes/coursesRoutes.js')
 const apisRoutes = require('./src/routes/apisRoutes.js')
 const simulatorsRoutes = require('./src/routes/simulatorsRoutes.js')
+const companiesRoutes = require('./src/routes/companiesRoutes.js')
 const cors = require('cors')
 const session = require('express-session')
 const userLoggedMiddleware = require('./src/middlewares/userLoggedMiddleware.js')
@@ -50,6 +51,8 @@ app.use('/tokens',tokensRoutes)
 app.use('/courses',coursesRoutes)
 app.use('/apis',apisRoutes)
 app.use('/simulators',simulatorsRoutes)
+
+app.use('/companies',companiesRoutes)
 
 //console.log(bcrypt.hashSync('dbernal@novaoil.mx',10))
 

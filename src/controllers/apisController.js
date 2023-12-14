@@ -328,13 +328,12 @@ const apisController = {
                         id_users: req.body.id_users,
                         id_simulators: req.body.id_simulators,
                         date: req.body.date,
-                        grade: req.body.grade,
-                        duration_secs: req.body.duration_secs
                     },
                     attributes:[[sequelize.fn('max', sequelize.col('id')),'max']],
                     raw:true,
                     nest:true
                     })
+                    
                 //store answers
                 for (let i = 0; i < keys.length; i++) {
                     await db.Exercises_answers.create({
@@ -370,7 +369,7 @@ const apisController = {
             
             //find user
             const userPassword = await db.Users.findOne({
-                attributes:['id','password'],
+                attributes:['id','password','first_name','last_name'],
                 where:{user_email:email},
                 raw:true,
             })
@@ -385,7 +384,9 @@ const apisController = {
             const user = {
                 'id_user': userPassword.id,
                 'passwordHashed': userPassword.password,
-                'tokenHashed': userToken == null ? 'NA': userToken.token
+                'tokenHashed': userToken == null ? 'NA': userToken.token,
+                'first_name': userPassword.first_name,
+                'last_name': userPassword.last_name,
             }
 
             return res.status(200).json(user)

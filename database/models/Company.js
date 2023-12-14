@@ -24,6 +24,13 @@ module.exports = (sequelize, DataTypes) => {
 
     const Company = sequelize.define(alias, cols, config)
 
+    Company.associate = (models) => {
+      Company.hasMany(models.Users, {
+          as: 'company_users',
+          foreignKey: 'id_companies'
+      })
+   }
+
     return Company
 
  }

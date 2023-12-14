@@ -217,7 +217,10 @@ const coursesController = {
 
             //get commission id
             const idCommission = await db.Course_commissions.findOne({
-                where:{commission:commission},
+                where:{
+                    commission:commission,
+                    id_courses:courseData.id
+                },
                 raw:true
             })
 
