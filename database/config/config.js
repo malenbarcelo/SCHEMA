@@ -2,7 +2,7 @@
 //const password = "30941767Male-"
 //const database = "malenbar_schema_sim"
 
-const username = "schemasim_administrator"
+const username = "schemasim_adm"
 const password = "schemasimadm"
 const database = "schemasim_db"
 
