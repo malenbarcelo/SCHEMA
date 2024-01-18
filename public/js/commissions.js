@@ -134,8 +134,7 @@ window.addEventListener('load',async()=>{
                         })
                     }
                 
-            })
-            
+            })            
 
             for (let k = 0; k < data[i].studentsResults[j].exercisesResults.length; k++) {
 
@@ -143,16 +142,16 @@ window.addEventListener('load',async()=>{
                 
                 steps.forEach(step => {
 
-                    const xDiv = document.getElementById('x_' + data[i].id + '_' + data[i].studentsResults[j].id + '_' + step.description)
+                    const xDiv = document.getElementById('x_' + data[i].id + '_' + step.id_exercises + '_' + data[i].studentsResults[j].id + '_' + step.description)
 
                     if (xDiv != null) {
 
                         xDiv.addEventListener("click",async(e)=>{
 
-                            const observations = steps.filter(element => element.description == step.description)[0].observations
+                            const observations = step.observations
 
                             divObsDetails.innerHTML = '<div class=divExData>' + observations.replace(/\n/g, '<br><br>') + '</div>'
-
+                            
                             divObs.style.left = xDiv.getBoundingClientRect().x + window.scrollX + -200 + 'px'//because header is 200px
                             divObs.style.top = xDiv.getBoundingClientRect().y + window.scrollY + 'px'
 

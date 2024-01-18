@@ -142,7 +142,7 @@
                                                             <% if (data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id)[0].stepsData.filter(step => step.description == data[i].exercises[kk].steps[kkk].description).length != 0) { %>
 
                                                                 <% if (data[i].studentsResults[k].exercisesResults.filter(result => result.id_exercises == data[i].exercises[kk].id)[0].stepsData.filter(step => step.description == data[i].exercises[kk].steps[kkk].description)[0].type == 'Error') { %>
-                                                                    <i class="fa-solid fa-xmark stepNotPassed" id="<%= 'x_' + data[i].id + '_' + data[i].studentsResults[k].id + '_' + data[i].exercises[kk].steps[kkk].description %>"></i>
+                                                                    <i class="fa-solid fa-xmark stepNotPassed" id="<%= 'x_' + data[i].id +  '_' + data[i].exercises[kk].id + '_' + data[i].studentsResults[k].id + '_' + data[i].exercises[kk].steps[kkk].description %>"></i>
 
                                                                     <% } else { %>
                                                                         <i class="fa-solid fa-check stepPassed">

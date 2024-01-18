@@ -533,9 +533,9 @@ const coursesController = {
             //add steps data to data
             await commissionData.stepsData(data)
 
-        return res.render('courses/commissions',{title:'Comisiones',data,commission})
-
-    }catch(error){
+            return res.render('courses/commissions',{title:'Comisiones',data,commission})
+            
+        }catch(error){
         console.log(error)
         return res.send('Ha ocurrido un error')
     }
